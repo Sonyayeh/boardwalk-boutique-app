@@ -1,12 +1,17 @@
+import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import {
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Animated,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
+
+import Recommendation from "./Recommendation";
+import RentalInfo from "./RentalInfo";
 
 import BlueBoard from "./assets/skateboards/blueboard.png";
 import OrangeBoard from "./assets/skateboards/orangeskateboard.png";
@@ -79,7 +84,20 @@ const shopItems = [
   },
 ];
 
-function ProductCard({ item, shop }) {
+function ProductCard({ item, shop, showCartPopup, addRentalItem }) {
+  const [liked, setLiked] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+
+  const handleAddToCart = () => {
+    setCartCount((prev) => prev + 1);
+
+    if (addRentalItem) {
+      addRentalItem(item);
+    }
+
+    showCartPopup();
+  };
+
   return (
     <View style={styles.card}>
       <View style={shop ? styles.shopImage : styles.boardImage}>
@@ -90,8 +108,25 @@ function ProductCard({ item, shop }) {
         />
 
         <View style={styles.icons}>
-          <Ionicons name="heart-outline" size={18} />
-          <Ionicons name="cart-outline" size={18} />
+          <TouchableOpacity onPress={() => setLiked(!liked)}>
+            <Ionicons
+              name={liked ? "heart" : "heart-outline"}
+              size={18}
+              color={liked ? "red" : "black"}
+            />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={handleAddToCart}>
+            <View>
+              <Ionicons name="cart-outline" size={18} />
+
+              {cartCount > 0 && (
+                <View style={styles.cartBadge}>
+                  <Text style={styles.cartBadgeText}>{cartCount}</Text>
+                </View>
+              )}
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -114,6 +149,91 @@ function Section({ title, children }) {
 }
 
 export default function App() {
+  const [page, setPage] = useState("home");
+  const [rentalCart, setRentalCart] = useState([]);
+  const fadeAnim = useState(new Animated.Value(0))[0];
+
+  const showCartPopup = () => {
+    Animated.sequence([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+      Animated.delay(1200),
+      Animated.timing(fadeAnim, {
+        toValue: 0,
+        duration: 250,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+ const addRentalItem = (item) => {
+  setRentalCart((prev) => {
+    const existingItem = prev.find(
+      (cartItem) => cartItem.type === item.type
+    );
+
+    if (existingItem) {
+      return prev.map((cartItem) =>
+        cartItem.type === item.type
+          ? {
+              ...cartItem,
+              quantity: cartItem.quantity + 1,
+            }
+          : cartItem
+      );
+    }
+
+    return [...prev, { ...item, quantity: 1 }];
+  });
+};
+
+const increaseItem = (itemType) => {
+  setRentalCart((prev) =>
+    prev.map((item) =>
+      item.type === itemType
+        ? { ...item, quantity: item.quantity + 1 }
+        : item
+    )
+  );
+};
+
+const decreaseItem = (itemType) => {
+  setRentalCart((prev) =>
+    prev
+      .map((item) =>
+        item.type === itemType
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+      .filter((item) => item.quantity > 0)
+  );
+};
+
+const deleteItem = (itemType) => {
+  setRentalCart((prev) =>
+    prev.filter((item) => item.type !== itemType)
+  );
+};
+
+if (page === "rentalInfo") {
+  return (
+    <RentalInfo
+      setPage={setPage}
+      rentalCart={rentalCart}
+      increaseItem={increaseItem}
+      decreaseItem={decreaseItem}
+      deleteItem={deleteItem}
+    />
+  );
+}
+
+if (page === "recommendation") {
+  return <Recommendation setPage={setPage} />;
+}
+
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scroll}>
@@ -123,13 +243,15 @@ export default function App() {
         </View>
 
         <View style={styles.tabs}>
-          <TouchableOpacity style={styles.tab}>
-            <Text style={styles.tabText}>Shop</Text>
-          </TouchableOpacity>
+         <View style={styles.tabs}>
+  <TouchableOpacity style={styles.tab} onPress={() => setPage("recommendation")}>
+    <Text style={styles.tabText}>Shop</Text>
+  </TouchableOpacity>
 
-          <TouchableOpacity style={styles.tab}>
-            <Text style={styles.tabText}>Rental</Text>
-          </TouchableOpacity>
+  <TouchableOpacity style={styles.tab} onPress={() => setPage("recommendation")}>
+    <Text style={styles.tabText}>Rental</Text>
+  </TouchableOpacity>
+</View>
         </View>
 
         <View style={styles.hero}>
@@ -161,34 +283,60 @@ export default function App() {
         <Section title="Recommendations">
           <View style={styles.row}>
             {rentalItems.map((item) => (
-              <ProductCard key={item.type} item={item} />
+              <ProductCard
+                key={item.type}
+                item={item}
+                showCartPopup={showCartPopup}
+                addRentalItem={addRentalItem}
+              />
             ))}
           </View>
-          <Text style={styles.more}>More...</Text>
+
+          <TouchableOpacity onPress={() => setPage("recommendation")}>
+            <Text style={styles.more}>More...</Text>
+          </TouchableOpacity>
         </Section>
 
-        <Section title="Our Shop">
-          <View style={styles.row}>
-            {shopItems.map((item) => (
-              <ProductCard key={item.type} item={item} shop />
-            ))}
-          </View>
-          <Text style={styles.more}>More...</Text>
-        </Section>
+       <Section title="Our Shop">
+        <View style={styles.row}>
+          {shopItems.map((item) => (
+            <ProductCard
+              key={item.type}
+              item={item}
+              shop
+              showCartPopup={showCartPopup}
+              addRentalItem={addRentalItem}
+            />
+          ))}
+        </View>
+
+        <Text style={styles.more}>More...</Text>
+      </Section>
 
         <Section title="Liked Items">
           <View style={styles.row}>
             {rentalItems.map((item) => (
-              <ProductCard key={item.type} item={item} />
+              <ProductCard
+                key={item.type}
+                item={item}
+                showCartPopup={showCartPopup}
+                addRentalItem={addRentalItem}
+              />
             ))}
           </View>
+
           <Text style={styles.more}>More...</Text>
         </Section>
 
         <Section title="Recently Viewed">
           <View style={styles.row}>
             {rentalItems.map((item) => (
-              <ProductCard key={item.type} item={item} />
+              <ProductCard
+                key={item.type}
+                item={item}
+                showCartPopup={showCartPopup}
+                addRentalItem={addRentalItem}
+              />
             ))}
           </View>
         </Section>
@@ -206,14 +354,41 @@ export default function App() {
 
         <View style={styles.location}>
           <Text style={styles.sectionTitle}>Our Location</Text>
-
           <Image source={Map} style={styles.mapImage} resizeMode="cover" />
         </View>
       </ScrollView>
 
+      <Animated.View
+        pointerEvents="none"
+        style={[
+          styles.screenPopup,
+          {
+            opacity: fadeAnim,
+          },
+        ]}
+      >
+        <View style={styles.popupBox}>
+          <Text style={styles.centerPopupText}>Item added to cart!</Text>
+        </View>
+      </Animated.View>
+
       <View style={styles.bottomNav}>
-        <Ionicons name="home-outline" size={22} />
-        <Ionicons name="cart-outline" size={22} />
+        <TouchableOpacity onPress={() => setPage("home")}>
+          <Ionicons name="home-outline" size={22} />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => setPage("rentalInfo")}>
+          <View>
+            <Ionicons name="cart-outline" size={22} />
+
+            {rentalCart.length > 0 && (
+              <View style={styles.bottomCartBadge}>
+                <Text style={styles.cartBadgeText}>{rentalCart.length}</Text>
+              </View>
+            )}
+          </View>
+        </TouchableOpacity>
+
         <Ionicons name="add-circle-outline" size={22} />
         <Ionicons name="heart-outline" size={22} />
       </View>
@@ -250,24 +425,26 @@ const styles = StyleSheet.create({
   },
 
   tabs: {
-    flexDirection: "row",
-    backgroundColor: "white",
-    height: 42,
-  },
+  flexDirection: "row",
+  backgroundColor: "white",
+  height: 60,
+  width: "100%",
+  alignItems: "center",
+},
 
-  tab: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRightWidth: 1,
-    borderColor: "#C8D4EE",
-  },
+tab: {
+  flex: 1,
+  alignItems: "center",
+  justifyContent: "center",
+  borderRightWidth: 1,
+  borderColor: "#C8D4EE",
+},
 
-  tabText: {
-    fontSize: 22,
-    color: "#85A0D8",
-    fontFamily: "serif",
-  },
+tabText: {
+  fontSize: 28,
+  color: "#85A0D8",
+  fontFamily: "serif",
+},
 
   hero: {
     height: 140,
@@ -479,5 +656,60 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
+  },
+
+  cartBadge: {
+    position: "absolute",
+    top: -8,
+    right: -8,
+    backgroundColor: "red",
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  bottomCartBadge: {
+    position: "absolute",
+    top: -10,
+    right: -10,
+    backgroundColor: "red",
+    minWidth: 17,
+    height: 17,
+    borderRadius: 9,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 4,
+  },
+
+  cartBadgeText: {
+    color: "white",
+    fontSize: 10,
+    fontWeight: "bold",
+  },
+
+  screenPopup: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 9999,
+  },
+
+  popupBox: {
+    backgroundColor: "rgba(70,70,70,0.92)",
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 14,
+  },
+
+  centerPopupText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "600",
   },
 });
