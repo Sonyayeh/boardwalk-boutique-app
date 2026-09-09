@@ -22,13 +22,13 @@ const DARK = "#12345C";
 
 const items = [
   {
-    name: "Girl\nSkateboards",
+    name: "Girl\nSkateboard",
     detail: "",
     price: "$4.00/hr",
     image: OrangeBoard,
   },
   {
-    name: "Girl\nSkateboards",
+    name: "Girl\nSkateboard",
     detail: "",
     price: "$5.00/hr",
     image: PompomBoard,
@@ -41,50 +41,46 @@ const items = [
   },
   {
     name: "FA",
-    detail: "Deck Store\nCollage",
+    detail: "",
     price: "$15.00/hr",
     image: PinkBoard,
   },
   {
     name: "Krooked",
-    detail: "Pricepoint\nTrio 8.25\nSkateboard",
+    detail: "",
     price: "$16.00/hr",
     image: WhiteBlueBoard,
   },
   {
     name: "FA",
-    detail: "Statue Deck",
+    detail: "",
     price: "$16.00/hr",
     image: MosaicBoard,
   },
 ];
 
-function ProductCard({ item }) {
+const pageMap = {
+  [PinkBoard]: "Fa",
+  [OrangeBoard]: "Orange",
+};
+
+function ProductCard({ item, onPress }) {
   return (
-    <View style={styles.card}>
+    <TouchableOpacity style={styles.card} onPress={onPress} disabled={!onPress}>
       <Image
         source={item.image}
         style={styles.boardImage}
         resizeMode="contain"
       />
-
       <View style={styles.iconGroup}>
-        <Ionicons name="heart-outline" size={22} color="black" />
-        <Ionicons name="cart-outline" size={22} color="black" />
+        <Ionicons name="heart-outline" size={20} color="black" />
+        <Ionicons name="cart-outline" size={20} color="black" />
       </View>
-
       <Text style={styles.productName}>{item.name}</Text>
-
-      {item.detail ? (
-        <Text style={styles.detail}>{item.detail}</Text>
-      ) : null}
-
+      {item.detail ? <Text style={styles.detail}>{item.detail}</Text> : null}
       <Text style={styles.price}>{item.price}</Text>
-
-      {!item.detail ? (
-        <Text style={styles.viewDetails}>View Details</Text>
-      ) : null}
-    </View>
+      {!item.detail ? <Text style={styles.viewDetails}>View Details</Text> : null}
+    </TouchableOpacity>
   );
 }
 
@@ -100,6 +96,7 @@ export default function Recommendation({ setPage }) {
             <Ionicons name="chevron-back" size={34} color="black" />
           </TouchableOpacity>
 
+
           <TouchableOpacity
             onPress={() => setPage("home")}
           >
@@ -109,19 +106,25 @@ export default function Recommendation({ setPage }) {
               resizeMode="contain"
             />
           </TouchableOpacity>
+         
+        
 
           <TouchableOpacity style={styles.menuButton}>
-            <Ionicons name="menu" size={34} color="black" />
+            <Ionicons name="menu" size={28} color="black" />
           </TouchableOpacity>
         </View>
 
         <Text style={styles.title}>Recommendations</Text>
 
-        <View style={styles.grid}>
-          {items.map((item, index) => (
-            <ProductCard key={index} item={item} />
-          ))}
-        </View>
+      <View style={styles.grid}>
+        {items.map((item, index) => (
+          <ProductCard
+            key={index}
+            item={item}
+            onPress={pageMap[item.image] ? () => setPage(pageMap[item.image]) : undefined}
+          />
+        ))}
+      </View>
       </ScrollView>
 
       <View style={styles.bottomNav}>
@@ -159,8 +162,8 @@ const styles = StyleSheet.create({
 
   menuButton: {
     position: "absolute",
-    right: 30,
-    top: 48,
+    right: 24,
+    top: 30,
   },
 
   logo: {
@@ -207,8 +210,8 @@ const styles = StyleSheet.create({
   productName: {
     marginTop: 12,
     color: DARK,
-    fontSize: 17,
-    lineHeight: 18,
+    fontSize: 15,
+    lineHeight: 16,
     textAlign: "center",
     fontFamily: "serif",
   },
@@ -216,7 +219,7 @@ const styles = StyleSheet.create({
   detail: {
     marginTop: 22,
     color: DARK,
-    fontSize: 11,
+    fontSize: 9,
     lineHeight: 12,
     textAlign: "center",
   },
@@ -231,7 +234,7 @@ const styles = StyleSheet.create({
   viewDetails: {
     marginTop: 8,
     color: DARK,
-    fontSize: 15,
+    fontSize: 13,
     textAlign: "center",
   },
 

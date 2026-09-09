@@ -6,14 +6,19 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 
 import Recommendation from "./Recommendation";
 import RentalInfo from "./RentalInfo";
+import Fa from "./Fa";
+import Orange from "./OrangeBoard";
+import Review from "./Review";
 
 import BlueBoard from "./assets/skateboards/blueboard.png";
+import PinkBoard from "./assets/skateboards/pinkboard.png";
 import OrangeBoard from "./assets/skateboards/orangeskateboard.png";
 import PompomBoard from "./assets/skateboards/pompomboard.png";
 
@@ -24,10 +29,11 @@ import Tshirt from "./assets/skateboards/tshirt.png";
 import AboutUs from "./assets/skateboards/aboutus.png";
 import Banner from "./assets/skateboards/banner.png";
 import Logo from "./assets/skateboards/logo.png";
-import Map from "./assets/skateboards/map.png";
+
 
 const BLUE = "#C8D4EE";
 const DARK = "#12345C";
+const WHITE = "#FFFFFF";
 const BUTTON_BLUE = "#8EA7DC";
 
 const brands = [
@@ -43,12 +49,12 @@ const brands = [
 ];
 
 const rentalItems = [
-  {
-    name: "Girl Skateboards",
-    type: "Sketchy Board",
-    price: "$4.00/hr",
-    image: OrangeBoard,
-  },
+   {
+      name: "FA",
+      type: "Deck Store Collage",
+      price: "$15.00/hr",
+      image: PinkBoard,
+    },
   {
     name: "Girl Skateboards",
     type: "Rickk Howard",
@@ -84,22 +90,38 @@ const shopItems = [
   },
 ];
 
-function ProductCard({ item, shop, showCartPopup, addRentalItem }) {
+function ProductCard({ item, shop, showCartPopup, addRentalItem, setPage }) {
   const [liked, setLiked] = useState(false);
   const [cartCount, setCartCount] = useState(0);
 
   const handleAddToCart = () => {
     setCartCount((prev) => prev + 1);
-
-    if (addRentalItem) {
-      addRentalItem(item);
-    }
-
+    if (addRentalItem) addRentalItem(item);
     showCartPopup();
   };
 
+  const handleCardPress = () => {
+    if (item.name === "FA") {
+      setPage("Fa");
+    }
+
+    if (item.name === "Orange") {
+      setPage("Orange");
+    }
+
+    if (item.name === "Review") {
+      setPage("Review");
+    }
+  };
+
+
+
   return (
-    <View style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      activeOpacity={item.name === "FA" ? 0.7 : 1}
+      onPress={handleCardPress}
+    >
       <View style={shop ? styles.shopImage : styles.boardImage}>
         <Image
           source={item.image}
@@ -119,7 +141,6 @@ function ProductCard({ item, shop, showCartPopup, addRentalItem }) {
           <TouchableOpacity onPress={handleAddToCart}>
             <View>
               <Ionicons name="cart-outline" size={18} />
-
               {cartCount > 0 && (
                 <View style={styles.cartBadge}>
                   <Text style={styles.cartBadgeText}>{cartCount}</Text>
@@ -135,7 +156,7 @@ function ProductCard({ item, shop, showCartPopup, addRentalItem }) {
       <Text style={styles.price}>{item.price}</Text>
 
       {!shop && <Text style={styles.details}>View Details</Text>}
-    </View>
+    </TouchableOpacity>
   );
 }
 
@@ -218,6 +239,14 @@ const deleteItem = (itemType) => {
   );
 };
 
+const [email, setEmail] = useState("");
+
+const handleSubscribe = () => {
+  // hook this up to whatever backend/service you're using later
+  console.log("Subscribed:", email);
+  setEmail("");
+};
+
 if (page === "rentalInfo") {
   return (
     <RentalInfo
@@ -233,6 +262,16 @@ if (page === "rentalInfo") {
 if (page === "recommendation") {
   return <Recommendation setPage={setPage} />;
 }
+if (page === "Fa") {
+  return <Fa setPage={setPage} />;
+}
+if (page === "Orange") {
+  return <Orange setPage={setPage} />;
+}
+
+if (page === "Review") {
+  return <Review setPage={setPage} />;
+}
 
   return (
     <View style={styles.screen}>
@@ -241,6 +280,7 @@ if (page === "recommendation") {
           <Image source={Logo} style={styles.logoImage} resizeMode="contain" />
           <Ionicons name="menu" size={28} style={styles.menu} />
         </View>
+        
 
         <View style={styles.tabs}>
          <View style={styles.tabs}>
@@ -280,6 +320,8 @@ if (page === "recommendation") {
           </View>
         </View>
 
+        
+
         <Section title="Recommendations">
           <View style={styles.row}>
             {rentalItems.map((item) => (
@@ -288,6 +330,7 @@ if (page === "recommendation") {
                 item={item}
                 showCartPopup={showCartPopup}
                 addRentalItem={addRentalItem}
+                setPage={setPage}
               />
             ))}
           </View>
@@ -306,6 +349,7 @@ if (page === "recommendation") {
               shop
               showCartPopup={showCartPopup}
               addRentalItem={addRentalItem}
+              setPage={setPage}
             />
           ))}
         </View>
@@ -321,6 +365,7 @@ if (page === "recommendation") {
                 item={item}
                 showCartPopup={showCartPopup}
                 addRentalItem={addRentalItem}
+                setPage={setPage}
               />
             ))}
           </View>
@@ -336,6 +381,7 @@ if (page === "recommendation") {
                 item={item}
                 showCartPopup={showCartPopup}
                 addRentalItem={addRentalItem}
+                setPage={setPage}
               />
             ))}
           </View>
@@ -345,18 +391,56 @@ if (page === "recommendation") {
 
         <View style={styles.about}>
           <Text style={styles.aboutText}>
-            Located in the heart of Vancouver, BC, Boardwalk Boutique is the
-            go-to destination for skaters and streetwear enthusiasts.
+            Boardwalk Boutique is Vancouver's destination for skaters and streetwear enthusiasts, offering skater clothing and high quality skateboard rentals for every experience
           </Text>
 
           <Image source={AboutUs} style={styles.aboutImage} resizeMode="cover" />
         </View>
 
-        <View style={styles.location}>
-          <Text style={styles.sectionTitle}>Our Location</Text>
-          <Image source={Map} style={styles.mapImage} resizeMode="cover" />
-        </View>
-      </ScrollView>
+       <View style={styles.footer}>
+  <View style={styles.newsletter}>
+    <Text style={styles.newsletterTitle}>Subscribe to our News Letter!</Text>
+    <Text style={styles.newsletterSubtitle}>
+      Get the newest deals and what's new in the boutique!
+    </Text>
+
+    <View style={styles.newsletterRow}>
+      <TextInput
+        style={styles.emailInput}
+        placeholder="Email address"
+        placeholderTextColor="#999"
+        value={email}
+        onChangeText={setEmail}
+      />
+      <TouchableOpacity style={styles.submitButton} onPress={handleSubscribe}>
+        <Text style={styles.submitButtonText}>Submit!</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+
+  <View style={styles.footerBottom}>
+    <Text style={styles.footerAddress}>
+      872 Seymour Street, Vancouver{"\n"}British Columbia, V6B 3L5, Canada
+    </Text>
+
+    <View style={styles.footerContactRow}>
+      <Text style={styles.footerContact}>(123) 4567890</Text>
+      <Text style={styles.footerContact}>contact@boardwalk.com</Text>
+    </View>
+
+    <View style={styles.footerIcons}>
+      <Ionicons name="logo-facebook" size={22} color={DARK} />
+      <Ionicons name="logo-twitter" size={22} color={DARK} />
+      <Ionicons name="logo-youtube" size={22} color={DARK} />
+      <Ionicons name="logo-linkedin" size={22} color={DARK} />
+    </View>
+
+    <Text style={styles.footerLinks}>
+      About Us | Rental Policy | FAQ | Careers
+    </Text>
+  </View>
+</View>
+</ScrollView>
 
       <Animated.View
         pointerEvents="none"
@@ -395,6 +479,8 @@ if (page === "recommendation") {
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   screen: {
@@ -622,7 +708,7 @@ tabText: {
     color: "white",
     width: "48%",
     fontSize: 11,
-    textAlign: "center",
+    textAlign: "left",
     lineHeight: 15,
     fontFamily: "serif",
     zIndex: 2,
@@ -640,10 +726,93 @@ tabText: {
     paddingTop: 22,
   },
 
-  mapImage: {
-    width: "100%",
-    height: 190,
-  },
+  footer: {
+  backgroundColor: "white",
+},
+
+newsletter: {
+  padding: 24,
+  alignItems: "center",
+},
+
+newsletterTitle: {
+  fontSize: 22,
+  fontWeight: "bold",
+  fontFamily: "serif",
+  color: DARK,
+  textAlign: "center",
+  marginBottom: 10,
+},
+
+newsletterSubtitle: {
+  fontSize: 13,
+  color: DARK,
+  textAlign: "center",
+  marginBottom: 16,
+},
+
+newsletterRow: {
+  flexDirection: "row",
+  width: "100%",
+},
+
+emailInput: {
+  flex: 1,
+  backgroundColor: "#EEEEEE",
+  paddingHorizontal: 14,
+  fontSize: 13,
+},
+
+submitButton: {
+  backgroundColor: DARK,
+  paddingHorizontal: 20,
+  justifyContent: "center",
+  alignItems: "center",
+},
+
+submitButtonText: {
+  color: "white",
+  fontWeight: "600",
+  fontSize: 13,
+},
+
+footerBottom: {
+  backgroundColor: BLUE,
+  paddingVertical: 24,
+  alignItems: "center",
+  borderTopLeftRadius: 24,
+  borderTopRightRadius: 24,
+},
+
+footerAddress: {
+  color: DARK,
+  textAlign: "center",
+  fontSize: 12,
+  marginBottom: 12,
+},
+
+footerContactRow: {
+  flexDirection: "row",
+  gap: 20,
+  marginBottom: 16,
+},
+
+footerContact: {
+  color: DARK,
+  fontSize: 12,
+},
+
+footerIcons: {
+  flexDirection: "row",
+  gap: 18,
+  marginBottom: 16,
+},
+
+footerLinks: {
+  color: DARK,
+  fontSize: 12,
+  textAlign: "center",
+},
 
   bottomNav: {
     position: "absolute",
