@@ -12,9 +12,11 @@ import {
 } from "react-native";
 
 import Recommendation from "./Recommendation";
+import Shop from "./Shop";
 import RentalInfo from "./RentalInfo";
 import Fa from "./Fa";
 import Orange from "./OrangeBoard";
+import Pompom from "./Pom";
 import Review from "./Review";
 
 import BlueBoard from "./assets/skateboards/blueboard.png";
@@ -101,12 +103,16 @@ function ProductCard({ item, shop, showCartPopup, addRentalItem, setPage }) {
   };
 
   const handleCardPress = () => {
-    if (item.name === "FA") {
-      setPage("Fa");
+     if (item.image === PinkBoard) {
+    setPage("Fa");
     }
 
-    if (item.name === "Orange") {
+    if (item.image === OrangeBoard) {
       setPage("Orange");
+    }
+
+    if (item.image === PompomBoard) {
+      setPage("Pom");
     }
 
     if (item.name === "Review") {
@@ -119,7 +125,7 @@ function ProductCard({ item, shop, showCartPopup, addRentalItem, setPage }) {
   return (
     <TouchableOpacity
       style={styles.card}
-      activeOpacity={item.name === "FA" ? 0.7 : 1}
+      activeOpacity={[PinkBoard, OrangeBoard, PompomBoard].includes(item.image) ? 0.7 : 1}
       onPress={handleCardPress}
     >
       <View style={shop ? styles.shopImage : styles.boardImage}>
@@ -172,6 +178,7 @@ function Section({ title, children }) {
 export default function App() {
   const [page, setPage] = useState("home");
   const [rentalCart, setRentalCart] = useState([]);
+  const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);   
   const fadeAnim = useState(new Animated.Value(0))[0];
 
   const showCartPopup = () => {
@@ -260,17 +267,26 @@ if (page === "rentalInfo") {
 }
 
 if (page === "recommendation") {
-  return <Recommendation setPage={setPage} />;
+  return <Recommendation setPage={setPage} rentalCart={rentalCart} />;
 }
+
+if (page === "shop") {
+  return <Shop setPage={setPage} rentalCart={rentalCart} />;
+}
+
+
 if (page === "Fa") {
-  return <Fa setPage={setPage} />;
+   return <Fa setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} />;
 }
 if (page === "Orange") {
-  return <Orange setPage={setPage} />;
+    return <Orange setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} />;
+}
+if (page === "Pom") {
+  return <Pompom setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} />;
 }
 
 if (page === "Review") {
-  return <Review setPage={setPage} />;
+  return <Review setPage={setPage} rentalCart={rentalCart} />;
 }
 
   return (
@@ -284,7 +300,7 @@ if (page === "Review") {
 
         <View style={styles.tabs}>
          <View style={styles.tabs}>
-  <TouchableOpacity style={styles.tab} onPress={() => setPage("recommendation")}>
+  <TouchableOpacity style={styles.tab} onPress={() => setPage("shop")}>
     <Text style={styles.tabText}>Shop</Text>
   </TouchableOpacity>
 
@@ -456,26 +472,31 @@ if (page === "Review") {
         </View>
       </Animated.View>
 
-      <View style={styles.bottomNav}>
-        <TouchableOpacity onPress={() => setPage("home")}>
-          <Ionicons name="home-outline" size={22} />
+     <View style={styles.bottomNav}>
+        {/* the home button */}
+        <TouchableOpacity onPress={() => setPage("home")} >
+                  <Ionicons name="home-outline" size={24} />
         </TouchableOpacity>
-
+        {/* the shopping cart */}
         <TouchableOpacity onPress={() => setPage("rentalInfo")}>
           <View>
-            <Ionicons name="cart-outline" size={22} />
-
-            {rentalCart.length > 0 && (
+            <Ionicons name="cart-outline" size={24} />
+            {totalItems > 0 && (
               <View style={styles.bottomCartBadge}>
-                <Text style={styles.cartBadgeText}>{rentalCart.length}</Text>
+                <Text style={styles.cartBadgeText}>{totalItems}</Text>
               </View>
             )}
           </View>
         </TouchableOpacity>
-
-        <Ionicons name="add-circle-outline" size={22} />
-        <Ionicons name="heart-outline" size={22} />
-      </View>
+          {/* go to the recommendation page */}
+          <TouchableOpacity onPress={() => setPage("recommendation")}>
+                  <Ionicons name="add-circle-outline" size={24} />
+          </TouchableOpacity> 
+          {/* going to liked page */}
+          <TouchableOpacity onPress={() => setPage("favorites")} >
+                  <Ionicons name="heart-outline" size={24} />
+          </TouchableOpacity>
+          </View>
     </View>
   );
 }

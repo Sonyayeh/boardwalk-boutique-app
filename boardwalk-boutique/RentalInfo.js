@@ -21,6 +21,8 @@ export default function RentalInfo({
   decreaseItem,
   deleteItem,
 }) {
+   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);   // ← add this line
+
   const getNumberFromPrice = (price) => {
     return Number(price.replace(/[^0-9.]/g, ""));
   };
@@ -28,6 +30,8 @@ export default function RentalInfo({
   const subtotal = rentalCart.reduce((total, item) => {
     return total + getNumberFromPrice(item.price) * item.quantity;
   }, 0);
+
+  
 
   const tax = subtotal * TAX_RATE;
   const cadtax = subtotal * TAX_CAD;
@@ -121,6 +125,29 @@ export default function RentalInfo({
           </View>
         )}
       </ScrollView>
+       <View style={styles.bottomNav}>
+                                   {/* the home button */}
+                                   <TouchableOpacity onPress={() => setPage("home")} >
+                                             <Ionicons name="home-outline" size={24} />
+                                   </TouchableOpacity>
+                                   {/* the shopping cart */}
+                                        <TouchableOpacity onPress={() => setPage("rentalInfo")}>
+                                        <Ionicons name="cart-outline" size={24} />
+                                        {totalItems > 0 && (
+                                          <View style={styles.bottomCartBadge}>
+                                            <Text style={styles.cartBadgeText}>{totalItems}</Text>
+                                          </View>
+                                        )}
+                                      </TouchableOpacity>
+                                     {/* go to the recommendation page */}
+                                     <TouchableOpacity onPress={() => setPage("recommendation")}>
+                                             <Ionicons name="add-circle-outline" size={24} />
+                                     </TouchableOpacity> 
+                                     {/* going to liked page */}
+                                     <TouchableOpacity onPress={() => setPage("favorites")} >
+                                             <Ionicons name="heart-outline" size={24} />
+                                     </TouchableOpacity>
+                                     </View>
     </View>
   );
 }
@@ -150,6 +177,39 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontFamily: "serif",
   },
+
+  bottomNav: {
+    position: "absolute",
+    bottom: 0,
+    height: 55,
+    width: "100%",
+    backgroundColor: "white",
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
+
+  bottomCartBadge: {
+  position: "absolute",
+  top: -10,
+  right: -10,
+  backgroundColor: "red",
+  minWidth: 17,
+  height: 17,
+  borderRadius: 9,
+  alignItems: "center",
+  justifyContent: "center",
+  paddingHorizontal: 4,
+},
+
+cartBadgeText: {
+  color: "white",
+  fontSize: 10,
+  fontWeight: "bold",
+},
+
 
   content: {
     padding: 20,

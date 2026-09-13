@@ -17,7 +17,8 @@ const WHITE = "#FFFFFF";
 import Logo from "./assets/skateboards/logo.png";
 import { BottomTabBarHeightCallbackContext } from "@react-navigation/bottom-tabs";
 
-export default function Review({ setPage }) {
+export default function Review({ setPage, addRentalItem, rentalCart }) {
+  const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0); 
   return (
     <View style={styles.screen}>
       <View style={styles.header}>
@@ -137,15 +138,34 @@ export default function Review({ setPage }) {
           </View>
 
       </ScrollView>
-        <View style={styles.bottomNav}>
-            <Ionicons name="home-outline" size={24} />
-            <Ionicons name="cart-outline" size={24} />
-            <Ionicons name="add-circle-outline" size={24} />
-            <Ionicons name="heart-outline" size={24} />
-          </View>
+         <View style={styles.bottomNav}>
+                              {/* the home button */}
+                              <TouchableOpacity onPress={() => setPage("home")} >
+                                        <Ionicons name="home-outline" size={24} />
+                              </TouchableOpacity>
+                              {/* the shopping cart */}
+                                   <TouchableOpacity onPress={() => setPage("rentalInfo")}>
+                                   <Ionicons name="cart-outline" size={24} />
+                                   {totalItems > 0 && (
+                                     <View style={styles.bottomCartBadge}>
+                                       <Text style={styles.cartBadgeText}>{totalItems}</Text>
+                                     </View>
+                                   )}
+                                 </TouchableOpacity>
+                                {/* go to the recommendation page */}
+                                <TouchableOpacity onPress={() => setPage("recommendation")}>
+                                        <Ionicons name="add-circle-outline" size={24} />
+                                </TouchableOpacity> 
+                                {/* going to liked page */}
+                                <TouchableOpacity onPress={() => setPage("favorites")} >
+                                        <Ionicons name="heart-outline" size={24} />
+                                </TouchableOpacity>
+                                </View>
     </View>
   );
 }
+
+// add the shopping cart item 
 
 const styles = StyleSheet.create({
 
@@ -194,6 +214,25 @@ menuButton: {
     alignItems: "center",
     justifyContent: "space-around",
   },
+
+  bottomCartBadge: {
+  position: "absolute",
+  top: -10,
+  right: -10,
+  backgroundColor: "red",
+  minWidth: 17,
+  height: 17,
+  borderRadius: 9,
+  alignItems: "center",
+  justifyContent: "center",
+  paddingHorizontal: 4,
+},
+
+cartBadgeText: {
+  color: "white",
+  fontSize: 10,
+  fontWeight: "bold",
+},
 
   reviewCard: {
   backgroundColor: "#fff",

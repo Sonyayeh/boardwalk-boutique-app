@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { GestureHandlerRootView, ScrollView } from "react-native-gesture-handler";
 
 import {
+  Animated,
   Image,
   StyleSheet,
   Text,
@@ -21,11 +22,29 @@ const BLUE = "#C8D4EE";
 const DARK = "#12345C";
 const WHITE = "#FFFFFF";
 
-export default function Orange({ setPage }) {
+export default function Orange({ setPage, addRentalItem, rentalCart }) {
   const outerScrollRef = useRef(null);
   const [liked, setLiked] = useState(false);
+  const fadeAnim = useState(new Animated.Value(0))[0];
+  const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0); 
 
-    function StarRating({ rating, reviewCount }) {
+   const showCartPopup = () => {
+      Animated.sequence([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 250,
+          useNativeDriver: true,
+        }),
+        Animated.delay(1200),
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 250,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    };
+
+  function StarRating({ rating, reviewCount }) {
   const stars = [1, 2, 3, 4, 5];
 
   return (
@@ -124,20 +143,30 @@ function RecommendedCard({ item }) {
             <Text style={styles.price}>$4.00/hr</Text>
             <StarRating rating={4} reviewCount={352} />
           </View>
-           <TouchableOpacity style={styles.book} onPress={() => setPage("rentalInfo")}>
-                  <Text style={styles.booktext}>Book Now</Text>
-                  <View style={styles.icon}>
-                   <Ionicons name="cart-outline" size={30} color="white" />
-                  </View>
-                    <TouchableOpacity onPress={() => setLiked(!liked)}>
-                 <View style={styles.heart}>
-                     <Ionicons name="heart-outline" size={30} 
-                     name={liked ? "heart" : "heart-outline"}
-                     color={liked ? "red" : "black"}/>
-                </View>
-                    </TouchableOpacity>
-                
-                </TouchableOpacity>
+           <TouchableOpacity
+                style={styles.book}
+                onPress={() => {
+                  addRentalItem({
+                    name: "Girl\nSkateboard",
+                    type: "Standard",
+                    price: "$4.00/hr",
+                    image: OrangeBoard,
+                  });
+                   showCartPopup();
+                }}
+              >
+                 <Text style={styles.booktext}>Book Now</Text>
+                             <View style={styles.icon}>
+                               <Ionicons name="cart-outline" size={30} color="white" />
+                             </View>
+                               <TouchableOpacity onPress={() => setLiked(!liked)}>
+                                 <View style={styles.heart}>
+                                   <Ionicons name="heart-outline" size={30} 
+                                   name={liked ? "heart" : "heart-outline"}
+                                   color={liked ? "red" : "black"}/>
+                             </View>
+                               </TouchableOpacity>
+                                 </TouchableOpacity>
                 <View>
                     <Text style={styles.title}>
                         Description:
@@ -249,12 +278,45 @@ function RecommendedCard({ item }) {
                 </View>
       </ScrollView>
     </View>
-        <View style={styles.bottomNav}>
-            <Ionicons name="home-outline" size={24} />
-            <Ionicons name="cart-outline" size={24} />
-            <Ionicons name="add-circle-outline" size={24} />
-            <Ionicons name="heart-outline" size={24} />
-          </View>
+
+     <Animated.View
+                  pointerEvents="none"
+                  style={[
+                    styles.screenPopup,
+                    {
+                      opacity: fadeAnim,
+                    },
+                  ]}
+                >
+                  <View style={styles.popupBox}>
+                    <Text style={styles.centerPopupText}>Item added to cart!</Text>
+                  </View>
+                </Animated.View>
+
+
+         <View style={styles.bottomNav}>
+                             {/* the home button */}
+                             <TouchableOpacity onPress={() => setPage("home")} >
+                                       <Ionicons name="home-outline" size={24} />
+                             </TouchableOpacity>
+                             {/* the shopping cart */}
+                                  <TouchableOpacity onPress={() => setPage("rentalInfo")}>
+                                  <Ionicons name="cart-outline" size={24} />
+                                  {totalItems > 0 && (
+                                    <View style={styles.bottomCartBadge}>
+                                      <Text style={styles.cartBadgeText}>{totalItems}</Text>
+                                    </View>
+                                  )}
+                                </TouchableOpacity>
+                               {/* go to the recommendation page */}
+                               <TouchableOpacity onPress={() => setPage("recommendation")}>
+                                       <Ionicons name="add-circle-outline" size={24} />
+                               </TouchableOpacity> 
+                               {/* going to liked page */}
+                               <TouchableOpacity onPress={() => setPage("favorites")} >
+                                       <Ionicons name="heart-outline" size={24} />
+                               </TouchableOpacity>
+                               </View>
       </GestureHandlerRootView>
   );
 }
@@ -315,6 +377,49 @@ const styles = StyleSheet.create({
     marginVertical: 24,
     
   },
+
+  screenPopup: {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 9999,
+},
+
+popupBox: {
+  backgroundColor: "rgba(70,70,70,0.92)",
+  paddingVertical: 14,
+  paddingHorizontal: 24,
+  borderRadius: 14,
+},
+
+centerPopupText: {
+  color: "white",
+  fontSize: 14,
+  fontWeight: "600",
+},
+
+bottomCartBadge: {
+  position: "absolute",
+  top: -10,
+  right: -10,
+  backgroundColor: "red",
+  minWidth: 17,
+  height: 17,
+  borderRadius: 9,
+  alignItems: "center",
+  justifyContent: "center",
+  paddingHorizontal: 4,
+},
+
+cartBadgeText: {
+  color: "white",
+  fontSize: 10,
+  fontWeight: "bold",
+},
 
   description:{
     fontSize: 13,

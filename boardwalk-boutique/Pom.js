@@ -17,17 +17,19 @@ import Map from "./assets/skateboards/map.png";
 import OrangeBoard from "./assets/skateboards/orangeskateboard.png";
 import PompomBoard from "./assets/skateboards/pompomboard.png";
 import BlueBoard from "./assets/skateboards/blueboard.png";
+import Socks from "./assets/skateboards/socks.png"
+import Tshirt from "./assets/skateboards/tshirt.png"
+
 
 const BLUE = "#C8D4EE";
 const DARK = "#12345C";
 const WHITE = "#FFFFFF";
 
-export default function Fa({ setPage, addRentalItem, rentalCart }) {
+export default function Pompom({ setPage, addRentalItem, rentalCart }) {
   const outerScrollRef = useRef(null);
   const [liked, setLiked] = useState(false);
   const fadeAnim = useState(new Animated.Value(0))[0];
   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0); 
-
 
   const showCartPopup = () => {
     Animated.sequence([
@@ -45,11 +47,10 @@ export default function Fa({ setPage, addRentalItem, rentalCart }) {
     ]).start();
   };
 
-
-  function StarRating({ rating, reviewCount }) {
+    function StarRating({ rating, reviewCount }) {
   const stars = [1, 2, 3, 4, 5];
 
-  return (
+   return (
     <View style={styles.ratingRow}>
       {stars.map((star) => (
         <Ionicons
@@ -68,6 +69,9 @@ export default function Fa({ setPage, addRentalItem, rentalCart }) {
   );
 }
 
+
+
+
 const recommendedBoards = [
   {
     name: "Girl\nSkateboards",
@@ -75,19 +79,21 @@ const recommendedBoards = [
     image: OrangeBoard,
   },
   {
-    name: "Girl\nSkateboards",
-    price: "$5.00/hr",
-    image: PompomBoard,
+    name: "Thrasher",
+    type: "Goat Socks",
+    price: "$15.00",
+    image: Socks,
   },
   {
-    name: "Dustin\nHenry",
-    price: "$6.00/hr",
-    image: BlueBoard,
+    name: "Bronze",
+    type: "Ranch Tee Navy",
+    price: "$34.00",
+    image: Tshirt,
   },
 ];
 
 function RecommendedCard({ item }) {
-   const [rentalCart, setRentalCart] = useState([]);
+  const [rentalCart, setRentalCart] = useState([]);
   return (
     <View style={styles.carouselCard}>
       <Image
@@ -133,54 +139,52 @@ function RecommendedCard({ item }) {
 
         <View style={styles.detailCard}>
           <Image
-            source={PinkBoard}
+            source={PompomBoard}
             style={styles.boardImage}
             resizeMode="contain"
           />
 
         </View>
           <Text style={styles.title}>
-            FA Deck Store Collage
+            Girl Skateboards 
           </Text>
           <View style={styles.priceRow}>
-            <Text style={styles.price}>$15.00/hr</Text>
+            <Text style={styles.price}>$5.00/hr</Text>
             <StarRating rating={4} reviewCount={352} />
           </View>
-           <TouchableOpacity
+             <TouchableOpacity
               style={styles.book}
               onPress={() => {
-                addRentalItem({
-                  name: "FA",
-                  type: "Deck Store Collage",
-                  price: "$15.00/hr",
-                  image: PinkBoard,
-                });
-                showCartPopup();
-              }}
+              addRentalItem({
+                name: "Girl\nSkateboard",
+                type: "PomPomPurin",
+                price: "$5.00/hr",
+                image: PompomBoard,
+              });
+              showCartPopup();
+            }}
             >
-                  <Text style={styles.booktext}>Book Now</Text>
-                  <View style={styles.icon}>
-                   <Ionicons name="cart-outline" size={30} color="white" />
-                  </View>
-                    <TouchableOpacity onPress={() => setLiked(!liked)}>
-                 <View style={styles.heart}>
-                        <Ionicons name="heart-outline" size={30} 
-                        name={liked ? "heart" : "heart-outline"}
-                        color={liked ? "red" : "black"}
-                        />
-                </View>
-                    </TouchableOpacity>
-                
+           <Text style={styles.booktext}>Book Now</Text>
+            <View style={styles.icon}>
+              <Ionicons name="cart-outline" size={30} color="white" />
+            </View>
+              <TouchableOpacity onPress={() => setLiked(!liked)}>
+                <View style={styles.heart}>
+                  <Ionicons name="heart-outline" size={30} 
+                  name={liked ? "heart" : "heart-outline"}
+                  color={liked ? "red" : "black"}/>
+            </View>
+              </TouchableOpacity>
                 </TouchableOpacity>
                 <View>
                     <Text style={styles.title}>
                         Description:
                     </Text>
                     <Text style={styles.description}>
-                        A pink-stained popsicle deck built on traditional maple construction. The graphic runs a vertical strip of layered photo/collage imagery down the center of the board. 
+                        This teal deck comes from Girl Skateboards' collaboration with Sanrio, featuring Pompompurin front and center in a playful, colorful graphic. Built on Griffin Gass's signature pro-model shape, the deck has a full round nose and tail with standard maple construction, giving it a smooth, well-balanced ride.
                     </Text>
                     <Text style={styles.description}>
-                          This is the ideal beginner friendly board for anyone who is new to skateboarding.
+                           Equal parts skate-ready and display-worthy, it's a fun pick for riders who want their board to have a little personality.
                     </Text>
                 </View>
             <View>
@@ -188,9 +192,9 @@ function RecommendedCard({ item }) {
                 Information:
                 </Text>
                 <View style={styles.list}>
-                <Text style={styles.listItem}>• Includes Mob Grip</Text>
-                <Text style={styles.listItem}>• Colour of deck may vary</Text>
-                <Text style={styles.listItem}>• Beginner friendly</Text>
+                <Text style={styles.listItem}>• An exclusive Sanrio collaboration.</Text>
+                <Text style={styles.listItem}>• A full round nose, full hips, and round blunted tail, measuring 8.5" x 32" with a 14.4375 wheelbase.</Text>
+                <Text style={styles.listItem}>• Signature pro-model deck design for professional skateboarder Griffin Gass</Text>
             </View>
             <Text style={styles.title}>
                 Available Location:
@@ -284,45 +288,43 @@ function RecommendedCard({ item }) {
       </ScrollView>
     </View>
 
-     <Animated.View
-                  pointerEvents="none"
-                  style={[
-                    styles.screenPopup,
-                    {
-                      opacity: fadeAnim,
-                    },
-                  ]}
-                >
-                  <View style={styles.popupBox}>
-                    <Text style={styles.centerPopupText}>Item added to cart!</Text>
-                  </View>
-      </Animated.View>
+      <Animated.View
+              pointerEvents="none"
+              style={[
+                styles.screenPopup,
+                {
+                  opacity: fadeAnim,
+                },
+              ]}
+            >
+              <View style={styles.popupBox}>
+                <Text style={styles.centerPopupText}>Item added to cart!</Text>
+              </View>
+            </Animated.View>
 
-
-        <View style={styles.bottomNav}>
-                             {/* the home button */}
-                             <TouchableOpacity onPress={() => setPage("home")} >
-                                       <Ionicons name="home-outline" size={24} />
-                             </TouchableOpacity>
-                             {/* the shopping cart */}
-                                  <TouchableOpacity onPress={() => setPage("rentalInfo")}>
-                                  <Ionicons name="cart-outline" size={24} />
-                                  {totalItems > 0 && (
-                                    <View style={styles.bottomCartBadge}>
-                                      <Text style={styles.cartBadgeText}>{totalItems}</Text>
-                                    </View>
-                                  )}
-                                </TouchableOpacity>
-                               {/* go to the recommendation page */}
-                               <TouchableOpacity onPress={() => setPage("recommendation")}>
-                                       <Ionicons name="add-circle-outline" size={24} />
-                               </TouchableOpacity> 
-                               {/* going to liked page */}
-                               <TouchableOpacity onPress={() => setPage("favorites")} >
-                                       <Ionicons name="heart-outline" size={24} />
-                               </TouchableOpacity>
-                               </View>
-                               
+       <View style={styles.bottomNav}>
+                     {/* the home button */}
+                     <TouchableOpacity onPress={() => setPage("home")} >
+                               <Ionicons name="home-outline" size={24} />
+                     </TouchableOpacity>
+                     {/* the shopping cart */}
+                          <TouchableOpacity onPress={() => setPage("rentalInfo")}>
+                          <Ionicons name="cart-outline" size={24} />
+                          {totalItems > 0 && (
+                            <View style={styles.bottomCartBadge}>
+                              <Text style={styles.cartBadgeText}>{totalItems}</Text>
+                            </View>
+                          )}
+                        </TouchableOpacity>
+                       {/* go to the recommendation page */}
+                       <TouchableOpacity onPress={() => setPage("recommendation")}>
+                               <Ionicons name="add-circle-outline" size={24} />
+                       </TouchableOpacity> 
+                       {/* going to liked page */}
+                       <TouchableOpacity onPress={() => setPage("favorites")} >
+                               <Ionicons name="heart-outline" size={24} />
+                       </TouchableOpacity>
+                       </View>
       </GestureHandlerRootView>
   );
 }
@@ -390,6 +392,49 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingBottom: 10
   },
+
+  screenPopup: {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 9999,
+},
+
+popupBox: {
+  backgroundColor: "rgba(70,70,70,0.92)",
+  paddingVertical: 14,
+  paddingHorizontal: 24,
+  borderRadius: 14,
+},
+
+centerPopupText: {
+  color: "white",
+  fontSize: 14,
+  fontWeight: "600",
+},
+
+bottomCartBadge: {
+  position: "absolute",
+  top: -10,
+  right: -10,
+  backgroundColor: "red",
+  minWidth: 17,
+  height: 17,
+  borderRadius: 9,
+  alignItems: "center",
+  justifyContent: "center",
+  paddingHorizontal: 4,
+},
+
+cartBadgeText: {
+  color: "white",
+  fontSize: 10,
+  fontWeight: "bold",
+},
 
   detailCard: {
     alignItems: "center",
@@ -477,49 +522,6 @@ reviewCount: {
     paddingHorizontal: 15,
     marginVertical: 10,
   },
-
-  screenPopup: {
-  position: "absolute",
-  top: 0,
-  left: 0,
-  right: 0,
-  bottom: 0,
-  justifyContent: "center",
-  alignItems: "center",
-  zIndex: 9999,
-},
-
-popupBox: {
-  backgroundColor: "rgba(70,70,70,0.92)",
-  paddingVertical: 14,
-  paddingHorizontal: 24,
-  borderRadius: 14,
-},
-
-centerPopupText: {
-  color: "white",
-  fontSize: 14,
-  fontWeight: "600",
-},
-
-bottomCartBadge: {
-  position: "absolute",
-  top: -10,
-  right: -10,
-  backgroundColor: "red",
-  minWidth: 17,
-  height: 17,
-  borderRadius: 9,
-  alignItems: "center",
-  justifyContent: "center",
-  paddingHorizontal: 4,
-},
-
-cartBadgeText: {
-  color: "white",
-  fontSize: 10,
-  fontWeight: "bold",
-},
 
   icon: {
     alignItems: "center",

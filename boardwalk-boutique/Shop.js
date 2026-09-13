@@ -17,9 +17,33 @@ import BlueBoard from "./assets/skateboards/blueboard.png";
 import PinkBoard from "./assets/skateboards/pinkboard.png";
 import WhiteBlueBoard from "./assets/skateboards/whiteblueboard.png";
 import MosaicBoard from "./assets/skateboards/mosaicboard.png";
+import Helmet from "./assets/skateboards/helmet.png";
+import Socks from "./assets/skateboards/socks.png";
+import Tshirt from "./assets/skateboards/tshirt.png";
 
 const BLUE = "#C8D4EE";
 const DARK = "#12345C";
+
+const clothes = [
+    {
+    name: "Thrasher",
+    type: "Goat Socks",
+    price: "$15.00",
+    image: Socks,
+  },
+    {
+    name: "Bronze",
+        type: "Ranch Tee Navy",
+        price: "$34.00",
+        image: Tshirt,
+  },
+    {
+    name: "TSG",
+        type: "Evolution Helmet",
+        price: "$85.99",
+        image: Helmet,
+  },
+];
 
 const items = [
   {
@@ -35,16 +59,16 @@ const items = [
     image: PompomBoard,
   },
   {
-    name: "Dustin\nHenry",
-    detail: "",
-    price: "$6.00/hr",
-    image: BlueBoard,
-  },
-  {
     name: "FA",
     detail: "",
     price: "$15.00/hr",
     image: PinkBoard,
+  },
+  {
+    name: "Dustin\nHenry",
+    detail: "",
+    price: "$6.00/hr",
+    image: BlueBoard,
   },
   {
     name: "Krooked",
@@ -86,7 +110,7 @@ function ProductCard({ item, onPress }) {
   );
 }
 
-export default function Recommendation({ setPage, rentalCart }) {
+export default function Shop({ setPage, rentalCart }) {
   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
@@ -118,7 +142,8 @@ export default function Recommendation({ setPage, rentalCart }) {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.title}>Recommendations</Text>
+        <Text style={styles.title}> Boardwalk Shop:</Text>
+        <Text style={styles.sub}>Popular Rental Boards:</Text>
 
       <View style={styles.grid}>
         {items.map((item, index) => (
@@ -126,6 +151,17 @@ export default function Recommendation({ setPage, rentalCart }) {
           key={index}
           item={item}
           onPress={pageMap[item.image] ? () => setPage(pageMap[item.image]) : undefined}
+        />
+      ))}
+      </View>
+        <Text style={styles.sub}>Hottest Apparels:</Text>
+
+      <View style={styles.grid}>
+        {clothes.map((item, index) => (
+        <ProductCard
+          key={index}
+          item={item}
+          onPress={pageMap[clothes.image] ? () => setPage(pageMap[clothes.image]) : undefined}
         />
       ))}
       </View>
@@ -138,13 +174,13 @@ export default function Recommendation({ setPage, rentalCart }) {
               </TouchableOpacity>
               {/* the shopping cart */}
               <TouchableOpacity onPress={() => setPage("rentalInfo")}>
-                <Ionicons name="cart-outline" size={24} />
-                  {totalItems > 0 && (
+                        <Ionicons name="cart-outline" size={24} />
+                          {rentalCart.length > 0 && (
                     <View style={styles.bottomCartBadge}>
-                      <Text style={styles.cartBadgeText}>{totalItems}</Text>
+                      <Text style={styles.cartBadgeText}>{rentalCart.length}</Text>
                     </View>
                   )}
-              </TouchableOpacity>
+                </TouchableOpacity>
                 {/* go to the recommendation page */}
                 <TouchableOpacity onPress={() => setPage("recommendation")}>
                         <Ionicons name="add-circle-outline" size={24} />
@@ -181,17 +217,17 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
 
+  logo: {
+    width: 170,
+    height: 80,
+  },
+
   menuButton: {
     position: "absolute",
     right: 24,
     top: 30,
   },
 
-  logo: {
-    width: 210,
-    height: 110,
-    marginTop: 18,
-  },
 
   title: {
     fontSize: 31,
@@ -199,7 +235,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontFamily: "serif",
     textAlign: "center",
-    marginBottom: 44,
+    marginBottom: 40,
+  },
+  sub: {
+    fontSize: 20,
+    color: DARK,
+    fontFamily: "serif",
+    textAlign: "center",
+    marginBottom: 20,
   },
 
   grid: {
@@ -262,11 +305,9 @@ const styles = StyleSheet.create({
   bottomNav: {
     position: "absolute",
     bottom: 0,
-    height: 55,
+    height: 58,
     width: "100%",
-    backgroundColor: "white",
-    borderTopLeftRadius: 18,
-    borderTopRightRadius: 18,
+    backgroundColor: "#E6E6E6",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
