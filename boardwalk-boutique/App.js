@@ -18,6 +18,7 @@ import Fa from "./Fa";
 import Orange from "./OrangeBoard";
 import Pompom from "./Pom";
 import Review from "./Review";
+import Favourite from "./Favourite";
 
 import BlueBoard from "./assets/skateboards/blueboard.png";
 import PinkBoard from "./assets/skateboards/pinkboard.png";
@@ -92,19 +93,27 @@ const shopItems = [
   },
 ];
 
-function ProductCard({ item, shop, showCartPopup, addRentalItem, setPage }) {
+function ProductCard({ item, shop, showCartPopup, addRentalItem, showLikePopup, showRemovePopup, addLikeItem, removeLikeItem, setPage }) {
   const [liked, setLiked] = useState(false);
-  const [cartCount, setCartCount] = useState(0);
 
   const handleAddToCart = () => {
-    setCartCount((prev) => prev + 1);
     if (addRentalItem) addRentalItem(item);
     showCartPopup();
   };
-
+  
+  const handleLikeItem = () => {
+    if (liked) {
+      if (removeLikeItem) removeLikeItem(item);
+      if (showRemovePopup) showRemovePopup();
+    } else {
+      if (addLikeItem) addLikeItem(item);
+      if (showLikePopup) showLikePopup();
+    }
+    setLiked(!liked);
+  };
   const handleCardPress = () => {
-     if (item.image === PinkBoard) {
-    setPage("Fa");
+    if (item.image === PinkBoard) {
+      setPage("Fa");
     }
 
     if (item.image === OrangeBoard) {
@@ -118,9 +127,10 @@ function ProductCard({ item, shop, showCartPopup, addRentalItem, setPage }) {
     if (item.name === "Review") {
       setPage("Review");
     }
+    if (item.name === "Favourite") {
+      setPage("Favourtie");
+    }
   };
-
-
 
   return (
     <TouchableOpacity
@@ -136,7 +146,7 @@ function ProductCard({ item, shop, showCartPopup, addRentalItem, setPage }) {
         />
 
         <View style={styles.icons}>
-          <TouchableOpacity onPress={() => setLiked(!liked)}>
+          <TouchableOpacity onPress={handleLikeItem}>
             <Ionicons
               name={liked ? "heart" : "heart-outline"}
               size={18}
@@ -145,14 +155,7 @@ function ProductCard({ item, shop, showCartPopup, addRentalItem, setPage }) {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={handleAddToCart}>
-            <View>
-              <Ionicons name="cart-outline" size={18} />
-              {cartCount > 0 && (
-                <View style={styles.cartBadge}>
-                  <Text style={styles.cartBadgeText}>{cartCount}</Text>
-                </View>
-              )}
-            </View>
+            <Ionicons name="cart-outline" size={18} />
           </TouchableOpacity>
         </View>
       </View>
@@ -178,8 +181,13 @@ function Section({ title, children }) {
 export default function App() {
   const [page, setPage] = useState("home");
   const [rentalCart, setRentalCart] = useState([]);
+  const [likedItems, setLikedItems] = useState([]);
   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);   
+  const totalLiked = likedItems.reduce((sum, item) => sum + item.quantity, 0);
   const fadeAnim = useState(new Animated.Value(0))[0];
+  const likeFadeAnim = useState(new Animated.Value(0))[0];
+  const removeFadeAnim = useState(new Animated.Value(0))[0];
+
 
   const showCartPopup = () => {
     Animated.sequence([
@@ -196,6 +204,40 @@ export default function App() {
       }),
     ]).start();
   };
+
+   const showLikePopup = () => {
+    Animated.sequence([
+      Animated.timing(likeFadeAnim, { toValue: 1, duration: 250, useNativeDriver: true }),
+      Animated.delay(1200),
+      Animated.timing(likeFadeAnim, { toValue: 0, duration: 250, useNativeDriver: true }),
+    ]).start();
+  };
+
+  const showRemovePopup = () => {
+  Animated.sequence([
+    Animated.timing(removeFadeAnim, { toValue: 1, duration: 250, useNativeDriver: true }),
+    Animated.delay(1200),
+    Animated.timing(removeFadeAnim, { toValue: 0, duration: 250, useNativeDriver: true }),
+  ]).start();
+};
+
+  const addLikeItem = (item) => {
+  setLikedItems((prev) => {
+    const existingItem = prev.find((likedItem) => likedItem.type === item.type);
+    if (existingItem) {
+      return prev.map((likedItem) =>
+        likedItem.type === item.type
+          ? { ...likedItem, quantity: likedItem.quantity + 1 }
+          : likedItem
+      );
+    }
+    return [...prev, { ...item, quantity: 1 }];
+  });
+};
+
+const removeLikeItem = (item) => {
+  setLikedItems((prev) => prev.filter((likedItem) => likedItem.type !== item.type));
+};
 
  const addRentalItem = (item) => {
   setRentalCart((prev) => {
@@ -246,6 +288,26 @@ const deleteItem = (itemType) => {
   );
 };
 
+
+
+const decreaseLikedItem = (itemType) => {
+  setLikedItems((prev) =>
+    prev
+      .map((item) =>
+        item.type === itemType
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+      .filter((item) => item.quantity > 0)
+  );
+};
+
+const deleteLikedItem = (itemType) => {
+  setLikedItems((prev) =>
+    prev.filter((item) => item.type !== itemType)
+  );
+};
+
 const [email, setEmail] = useState("");
 
 const handleSubscribe = () => {
@@ -267,26 +329,71 @@ if (page === "rentalInfo") {
 }
 
 if (page === "recommendation") {
-  return <Recommendation setPage={setPage} rentalCart={rentalCart} />;
+  return <Recommendation setPage={setPage} rentalCart={rentalCart} 
+  likedItems={likedItems} 
+      setPage={setPage}
+      rentalCart={rentalCart}
+      likedItems={likedItems}
+      addLikeItem={addLikeItem}
+      showLikePopup={showLikePopup}
+  />;
 }
 
 if (page === "shop") {
-  return <Shop setPage={setPage} rentalCart={rentalCart} />;
+  return <Shop setPage={setPage} rentalCart={rentalCart} likedItems={likedItems} 
+      setPage={setPage}
+      rentalCart={rentalCart}
+      likedItems={likedItems}
+      addLikeItem={addLikeItem}
+      showLikePopup={showLikePopup}
+  
+  />;
 }
-
 
 if (page === "Fa") {
-   return <Fa setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} />;
+   return <Fa setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} 
+   likedItems={likedItems} 
+      setPage={setPage}
+      rentalCart={rentalCart}
+      likedItems={likedItems}
+      addLikeItem={addLikeItem}
+      showLikePopup={showLikePopup}
+   />;
 }
 if (page === "Orange") {
-    return <Orange setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} />;
+    return <Orange setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} 
+    likedItems={likedItems} 
+      setPage={setPage}
+      rentalCart={rentalCart}
+      likedItems={likedItems}
+      addLikeItem={addLikeItem}
+      showLikePopup={showLikePopup}
+    />;
 }
 if (page === "Pom") {
-  return <Pompom setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} />;
+  return <Pompom setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} 
+  likedItems={likedItems} 
+      setPage={setPage}
+      rentalCart={rentalCart}
+      likedItems={likedItems}
+      addLikeItem={addLikeItem}
+      showLikePopup={showLikePopup}
+  />;
 }
 
 if (page === "Review") {
-  return <Review setPage={setPage} rentalCart={rentalCart} />;
+  return <Review setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} />;
+}
+
+if (page === "Favourite") {
+  return (
+    <Favourite
+      setPage={setPage}
+      rentalCart={rentalCart}
+      likedItems={likedItems}
+      deleteItem={deleteLikedItem}
+    />
+  );
 }
 
   return (
@@ -339,17 +446,77 @@ if (page === "Review") {
         
 
         <Section title="Recommendations">
-          <View style={styles.row}>
-            {rentalItems.map((item) => (
-              <ProductCard
-                key={item.type}
-                item={item}
-                showCartPopup={showCartPopup}
-                addRentalItem={addRentalItem}
-                setPage={setPage}
-              />
-            ))}
-          </View>
+  <View style={styles.row}>
+    {rentalItems.map((item) => (
+      <ProductCard
+        key={item.type}
+        item={item}
+        showCartPopup={showCartPopup}
+        addRentalItem={addRentalItem}
+        showLikePopup={showLikePopup}
+        showRemovePopup={showRemovePopup}
+        addLikeItem={addLikeItem}
+        removeLikeItem={removeLikeItem}
+        setPage={setPage}
+      />
+    ))}
+  </View>
+</Section>
+
+<Section title="Our Shop">
+  <View style={styles.row}>
+    {shopItems.map((item) => (
+      <ProductCard
+        key={item.type}
+        item={item}
+        shop
+        showCartPopup={showCartPopup}
+        addRentalItem={addRentalItem}
+        showLikePopup={showLikePopup}
+        showRemovePopup={showRemovePopup}
+        addLikeItem={addLikeItem}
+        removeLikeItem={removeLikeItem}
+        setPage={setPage}
+      />
+    ))}
+  </View>
+</Section>
+
+<Section title="Liked Items">
+  <View style={styles.row}>
+    {rentalItems.map((item) => (
+      <ProductCard
+        key={item.type}
+        item={item}
+        showCartPopup={showCartPopup}
+        addRentalItem={addRentalItem}
+        showLikePopup={showLikePopup}
+        showRemovePopup={showRemovePopup}
+        addLikeItem={addLikeItem}
+        removeLikeItem={removeLikeItem}
+        setPage={setPage}
+      />
+    ))}
+  </View>
+</Section>
+
+<Section title="Recently Viewed">
+  <View style={styles.row}>
+    {rentalItems.map((item) => (
+      <ProductCard
+        key={item.type}
+        item={item}
+        showCartPopup={showCartPopup}
+        addRentalItem={addRentalItem}
+        showLikePopup={showLikePopup}
+        showRemovePopup={showRemovePopup}
+        addLikeItem={addLikeItem}
+        removeLikeItem={removeLikeItem}
+        setPage={setPage}
+      />
+    ))}
+  </View>
+
 
           <TouchableOpacity onPress={() => setPage("recommendation")}>
             <Text style={styles.more}>More...</Text>
@@ -357,16 +524,19 @@ if (page === "Review") {
         </Section>
 
        <Section title="Our Shop">
-        <View style={styles.row}>
-          {shopItems.map((item) => (
-            <ProductCard
-              key={item.type}
-              item={item}
-              shop
-              showCartPopup={showCartPopup}
-              addRentalItem={addRentalItem}
-              setPage={setPage}
-            />
+  <View style={styles.row}>
+    {shopItems.map((item) => (
+      <ProductCard
+        key={item.type}
+        item={item}
+        shop
+        showCartPopup={showCartPopup}
+        addRentalItem={addRentalItem}
+        showLikePopup={showLikePopup}
+        showRemovePopup={showRemovePopup}
+        addLikeItem={addLikeItem}
+        setPage={setPage}
+      />
           ))}
         </View>
 
@@ -379,9 +549,13 @@ if (page === "Review") {
               <ProductCard
                 key={item.type}
                 item={item}
-                showCartPopup={showCartPopup}
-                addRentalItem={addRentalItem}
-                setPage={setPage}
+                 showCartPopup={showCartPopup}
+                  addRentalItem={addRentalItem}
+                  showLikePopup={showLikePopup}
+                  showRemovePopup={showRemovePopup}
+                  addLikeItem={addLikeItem}
+                  removeLikeItem={removeLikeItem}
+                  setPage={setPage}
               />
             ))}
           </View>
@@ -390,15 +564,19 @@ if (page === "Review") {
         </Section>
 
         <Section title="Recently Viewed">
-          <View style={styles.row}>
-            {rentalItems.map((item) => (
-              <ProductCard
-                key={item.type}
-                item={item}
-                showCartPopup={showCartPopup}
-                addRentalItem={addRentalItem}
-                setPage={setPage}
-              />
+  <View style={styles.row}>
+    {rentalItems.map((item) => (
+      <ProductCard
+        key={item.type}
+        item={item}
+         showCartPopup={showCartPopup}
+        addRentalItem={addRentalItem}
+        showLikePopup={showLikePopup}
+        showRemovePopup={showRemovePopup}
+        addLikeItem={addLikeItem}
+        removeLikeItem={removeLikeItem}
+        setPage={setPage}
+      />
             ))}
           </View>
         </Section>
@@ -458,6 +636,7 @@ if (page === "Review") {
 </View>
 </ScrollView>
 
+      {/* this is the adding to cart */}
       <Animated.View
         pointerEvents="none"
         style={[
@@ -471,6 +650,36 @@ if (page === "Review") {
           <Text style={styles.centerPopupText}>Item added to cart!</Text>
         </View>
       </Animated.View>
+
+      {/* the remove from favourite list */}
+<Animated.View
+  pointerEvents="none"
+  style={[
+    styles.screenPopup,
+    {
+      opacity: removeFadeAnim,
+    },
+  ]}
+>
+  <View style={styles.popupBox}>
+    <Text style={styles.centerPopupText}>Removed from Favourites.</Text>
+  </View>
+</Animated.View>
+
+       {/* the add to favourite list */}
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            styles.screenPopup,
+            {
+              opacity: likeFadeAnim,
+            },
+          ]}
+        >
+          <View style={styles.popupBox}>
+            <Text style={styles.centerPopupText}>Added to Favourites!</Text>
+          </View>
+        </Animated.View>
 
      <View style={styles.bottomNav}>
         {/* the home button */}
@@ -488,13 +697,20 @@ if (page === "Review") {
             )}
           </View>
         </TouchableOpacity>
+        
           {/* go to the recommendation page */}
           <TouchableOpacity onPress={() => setPage("recommendation")}>
                   <Ionicons name="add-circle-outline" size={24} />
           </TouchableOpacity> 
+
           {/* going to liked page */}
-          <TouchableOpacity onPress={() => setPage("favorites")} >
+          <TouchableOpacity onPress={() => setPage("Favourite")} >
                   <Ionicons name="heart-outline" size={24} />
+                   {totalLiked > 0 && (
+              <View style={styles.bottomLikeBadge}>
+                <Text style={styles.LikeBadgeText}>{totalLiked}</Text>
+              </View>
+            )}
           </TouchableOpacity>
           </View>
     </View>
@@ -873,7 +1089,26 @@ footerLinks: {
     paddingHorizontal: 4,
   },
 
+  bottomLikeBadge: {
+    position: "absolute",
+    top: -10,
+    right: -10,
+    backgroundColor: "red",
+    minWidth: 17,
+    height: 17,
+    borderRadius: 9,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 4,
+  },
+
   cartBadgeText: {
+    color: "white",
+    fontSize: 10,
+    fontWeight: "bold",
+  },
+
+  LikeBadgeText: {
     color: "white",
     fontSize: 10,
     fontWeight: "bold",

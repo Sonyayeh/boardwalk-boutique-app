@@ -150,7 +150,7 @@ export default function Recommendation({ setPage, rentalCart }) {
                         <Ionicons name="add-circle-outline" size={24} />
                 </TouchableOpacity> 
                 {/* going to liked page */}
-                <TouchableOpacity onPress={() => setPage("favorites")} >
+                <TouchableOpacity onPress={() => setPage("Favourite")} >
                         <Ionicons name="heart-outline" size={24} />
                 </TouchableOpacity>
                 </View>
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    height: 190,
+    height: 110,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   backButton: {
     position: "absolute",
     left: 24,
-    top: 48,
+    top: 30,
     zIndex: 2,
   },
 
@@ -188,18 +188,18 @@ const styles = StyleSheet.create({
   },
 
   logo: {
-    width: 210,
-    height: 110,
-    marginTop: 18,
+    width: 170,
+    height: 80,
   },
 
   title: {
-    fontSize: 31,
+    fontSize: 28,
     color: DARK,
     fontWeight: "bold",
     fontFamily: "serif",
     textAlign: "center",
     marginBottom: 44,
+    paddingTop:20,
   },
 
   grid: {

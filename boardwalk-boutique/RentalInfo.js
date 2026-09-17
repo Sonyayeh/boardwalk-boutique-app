@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { Button } from "react-native-web";
+import Logo from "./assets/skateboards/logo.png";
 
 const BLUE = "#C8D4EE";
 const DARK = "#12345C";
@@ -21,7 +22,7 @@ export default function RentalInfo({
   decreaseItem,
   deleteItem,
 }) {
-   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);   // ← add this line
+   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);   // this line shows how much item is in the shopping cart
 
   const getNumberFromPrice = (price) => {
     return Number(price.replace(/[^0-9.]/g, ""));
@@ -41,17 +42,25 @@ export default function RentalInfo({
     <View style={styles.screen}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => setPage("home")} style={styles.backBtn}>
-          <Ionicons name="chevron-back" size={28} color={DARK} />
+          <Ionicons name="chevron-back" size={34} color={DARK} />
         </TouchableOpacity>
 
+        <TouchableOpacity onPress={() => setPage("home")}>
+                  <Image source={Logo} style={styles.logo} resizeMode="contain" />
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.menuButton}>
+                          <Ionicons name="menu" size={28} color="black" />
+                        </TouchableOpacity>
+                      </View>
+
         <Text style={styles.title}>Rental Info</Text>
-      </View>
 
       <ScrollView contentContainerStyle={styles.content}>
         {rentalCart.length === 0 ? (
           <View style={styles.emptyBox}>
             <Ionicons name="cart-outline" size={44} color={DARK} />
-            <Text style={styles.emptyText}>No rental items added yet.</Text>
+            <Text style={styles.emptyText}>Your Cart is Empty!</Text>
           </View>
         ) : (
           rentalCart.map((item, index) => (
@@ -144,7 +153,7 @@ export default function RentalInfo({
                                              <Ionicons name="add-circle-outline" size={24} />
                                      </TouchableOpacity> 
                                      {/* going to liked page */}
-                                     <TouchableOpacity onPress={() => setPage("favorites")} >
+                                     <TouchableOpacity onPress={() => setPage("Favourite")} >
                                              <Ionicons name="heart-outline" size={24} />
                                      </TouchableOpacity>
                                      </View>
@@ -159,7 +168,7 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    height: 100,
+    height: 110,
     backgroundColor: BLUE,
     justifyContent: "center",
     alignItems: "center",
@@ -167,8 +176,9 @@ const styles = StyleSheet.create({
 
   backBtn: {
     position: "absolute",
-    left: 20,
-    top: 46,
+    left: 24,
+    top: 30,
+    zIndex: 2,
   },
 
   title: {
@@ -176,6 +186,20 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     fontFamily: "serif",
+    textAlign: "center",
+    paddingTop: 20,
+    // marginBottom: 5,
+  },
+
+   menuButton: {
+    position: "absolute",
+    right: 24,
+    top: 30,
+  },
+
+  logo: {
+    width: 170,
+    height: 80,
   },
 
   bottomNav: {
@@ -214,6 +238,7 @@ cartBadgeText: {
   content: {
     padding: 20,
     paddingBottom: 80,
+    fontFamily: "serif",
   },
 
   emptyBox: {

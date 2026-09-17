@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import {
+  Animated,
   Image,
   ScrollView,
   StyleSheet,
@@ -90,7 +91,14 @@ const pageMap = {
   [PompomBoard]: "Pom",
 };
 
-function ProductCard({ item, onPress }) {
+function ProductCard({ item, onPress, addLikeItem, showLikePopup }) {
+  const [liked, setLiked] = useState(false);
+
+  const handleLikeItem = () => {
+    if (addLikeItem) addLikeItem(item);
+    if (showLikePopup) showLikePopup();
+  };
+
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} disabled={!onPress}>
       <Image
@@ -99,7 +107,16 @@ function ProductCard({ item, onPress }) {
         resizeMode="contain"
       />
       <View style={styles.iconGroup}>
-        <Ionicons name="heart-outline" size={20} color="black" />
+        <TouchableOpacity onPress={() => {
+            setLiked(!liked);
+            handleLikeItem();
+          }}>
+          <Ionicons
+            name={liked ? "heart" : "heart-outline"}
+            size={20}
+            color={liked ? "red" : "black"}
+          />
+        </TouchableOpacity>
         <Ionicons name="cart-outline" size={20} color="black" />
       </View>
       <Text style={styles.productName}>{item.name}</Text>
@@ -110,8 +127,18 @@ function ProductCard({ item, onPress }) {
   );
 }
 
-export default function Shop({ setPage, rentalCart }) {
+export default function Shop({ setPage, rentalCart, likedItems, addLikeItem }) {
   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);
+  const totalLiked = likedItems.reduce((sum, item) => sum + item.quantity, 0);
+  const likeFadeAnim = useState(new Animated.Value(0))[0];
+
+  const showLikePopup = () => {
+    Animated.sequence([
+      Animated.timing(likeFadeAnim, { toValue: 1, duration: 250, useNativeDriver: true }),
+      Animated.delay(1200),
+      Animated.timing(likeFadeAnim, { toValue: 0, duration: 250, useNativeDriver: true }),
+    ]).start();
+  };
 
   return (
     <View style={styles.screen}>
@@ -124,18 +151,9 @@ export default function Shop({ setPage, rentalCart }) {
             <Ionicons name="chevron-back" size={34} color="black" />
           </TouchableOpacity>
 
-
-          <TouchableOpacity
-            onPress={() => setPage("home")}
-          >
-            <Image
-              source={Logo}
-              style={styles.logo}
-              resizeMode="contain"
-            />
+          <TouchableOpacity onPress={() => setPage("home")}>
+            <Image source={Logo} style={styles.logo} resizeMode="contain" />
           </TouchableOpacity>
-         
-        
 
           <TouchableOpacity style={styles.menuButton}>
             <Ionicons name="menu" size={28} color="black" />
@@ -145,51 +163,74 @@ export default function Shop({ setPage, rentalCart }) {
         <Text style={styles.title}> Boardwalk Shop:</Text>
         <Text style={styles.sub}>Popular Rental Boards:</Text>
 
-      <View style={styles.grid}>
-        {items.map((item, index) => (
-        <ProductCard
-          key={index}
-          item={item}
-          onPress={pageMap[item.image] ? () => setPage(pageMap[item.image]) : undefined}
-        />
-      ))}
-      </View>
+        <View style={styles.grid}>
+          {items.map((item, index) => (
+            <ProductCard
+              key={index}
+              item={item}
+              onPress={pageMap[item.image] ? () => setPage(pageMap[item.image]) : undefined}
+              addLikeItem={addLikeItem}
+              showLikePopup={showLikePopup}
+            />
+          ))}
+        </View>
+
         <Text style={styles.sub}>Hottest Apparels:</Text>
 
-      <View style={styles.grid}>
-        {clothes.map((item, index) => (
-        <ProductCard
-          key={index}
-          item={item}
-          onPress={pageMap[clothes.image] ? () => setPage(pageMap[clothes.image]) : undefined}
-        />
-      ))}
-      </View>
+        <View style={styles.grid}>
+          {clothes.map((item, index) => (
+            <ProductCard
+              key={index}
+              item={item}
+              onPress={pageMap[item.image] ? () => setPage(pageMap[item.image]) : undefined}
+              addLikeItem={addLikeItem}
+              showLikePopup={showLikePopup}
+            />
+          ))}
+        </View>
       </ScrollView>
 
-       <View style={styles.bottomNav}>
-              {/* the home button */}
-              <TouchableOpacity onPress={() => setPage("home")} >
-                        <Ionicons name="home-outline" size={24} />
-              </TouchableOpacity>
-              {/* the shopping cart */}
-              <TouchableOpacity onPress={() => setPage("rentalInfo")}>
-                        <Ionicons name="cart-outline" size={24} />
-                          {rentalCart.length > 0 && (
-                    <View style={styles.bottomCartBadge}>
-                      <Text style={styles.cartBadgeText}>{rentalCart.length}</Text>
-                    </View>
-                  )}
-                </TouchableOpacity>
-                {/* go to the recommendation page */}
-                <TouchableOpacity onPress={() => setPage("recommendation")}>
-                        <Ionicons name="add-circle-outline" size={24} />
-                </TouchableOpacity> 
-                {/* going to liked page */}
-                <TouchableOpacity onPress={() => setPage("favorites")} >
-                        <Ionicons name="heart-outline" size={24} />
-                </TouchableOpacity>
-                </View>
+      <Animated.View
+  pointerEvents="none"
+  style={[
+    styles.screenPopup,
+    {
+      opacity: likeFadeAnim,
+    },
+  ]}
+>
+  <View style={styles.popupBox}>
+    <Text style={styles.centerPopupText}>Added to Favourites!</Text>
+  </View>
+</Animated.View>
+
+      <View style={styles.bottomNav}>
+        <TouchableOpacity onPress={() => setPage("home")}>
+          <Ionicons name="home-outline" size={24} />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => setPage("rentalInfo")}>
+          <Ionicons name="cart-outline" size={24} />
+          {totalItems > 0 && (
+            <View style={styles.bottomCartBadge}>
+              <Text style={styles.cartBadgeText}>{totalItems}</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => setPage("recommendation")}>
+          <Ionicons name="add-circle-outline" size={24} />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => setPage("Favourite")}>
+          <Ionicons name="heart-outline" size={24} />
+          {totalLiked > 0 && (
+            <View style={styles.bottomLikeBadge}>
+              <Text style={styles.LikeBadgeText}>{totalLiked}</Text>
+            </View>
+          )}
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -205,7 +246,7 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    height: 190,
+    height: 110,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -213,7 +254,7 @@ const styles = StyleSheet.create({
   backButton: {
     position: "absolute",
     left: 24,
-    top: 48,
+    top: 30,
     zIndex: 2,
   },
 
@@ -330,5 +371,47 @@ cartBadgeText: {
   color: "white",
   fontSize: 10,
   fontWeight: "bold",
+},
+
+bottomLikeBadge: {
+  position: "absolute",
+  top: -10,
+  right: -10,
+  backgroundColor: "red",
+  minWidth: 17,
+  height: 17,
+  borderRadius: 9,
+  alignItems: "center",
+  justifyContent: "center",
+  paddingHorizontal: 4,
+},
+
+LikeBadgeText: {
+  color: "white",
+  fontSize: 10,
+  fontWeight: "bold",
+},
+screenPopup: {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 9999,
+},
+
+popupBox: {
+  backgroundColor: "rgba(70,70,70,0.92)",
+  paddingVertical: 14,
+  paddingHorizontal: 24,
+  borderRadius: 14,
+},
+
+centerPopupText: {
+  color: "white",
+  fontSize: 14,
+  fontWeight: "600",
 },
 });

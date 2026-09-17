@@ -313,7 +313,7 @@ function RecommendedCard({ item }) {
                                        <Ionicons name="add-circle-outline" size={24} />
                                </TouchableOpacity> 
                                {/* going to liked page */}
-                               <TouchableOpacity onPress={() => setPage("favorites")} >
+                               <TouchableOpacity onPress={() => setPage("Favourite")} >
                                        <Ionicons name="heart-outline" size={24} />
                                </TouchableOpacity>
                                </View>
