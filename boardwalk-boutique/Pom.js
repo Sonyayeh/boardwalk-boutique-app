@@ -25,7 +25,7 @@ const BLUE = "#C8D4EE";
 const DARK = "#12345C";
 const WHITE = "#FFFFFF";
 
-export default function Pompom({ setPage, addRentalItem, rentalCart }) {
+export default function Pompom({ setPage, addRentalItem, rentalCart, goBack }) {
   const outerScrollRef = useRef(null);
   const [liked, setLiked] = useState(false);
   const fadeAnim = useState(new Animated.Value(0))[0];
@@ -120,7 +120,7 @@ function RecommendedCard({ item }) {
         <View style={styles.header}>
           <TouchableOpacity
             style={styles.backButton}
-            onPress={() => setPage("recommendation")}
+            onPress={goBack}
           >
             <Ionicons name="chevron-back" size={34} color="black" />
           </TouchableOpacity>
@@ -222,12 +222,10 @@ function RecommendedCard({ item }) {
                         <Ionicons name="star" size={16} color="#F5B400" />
                         <Ionicons name="star" size={16} color="#F5B400" />
                         <Ionicons name="star" size={16} color="#F5B400" />
-                        <Text style={styles.reviewName}>James .L</Text>
+                        <Text style={styles.reviewName}>Maya R</Text>
                     </View>
                     <Text style={styles.reviewText}>
-                        I love Boardwalk Boutique. All of their boards are the highest quality
-                        in town. Employees are super nice and chill, and my online orders and
-                        rentals are always on time.
+                         I am a skateboard beginner and a Sanrio fan. I was immediately drawn to this board mainly because of the graphics. It somehow also went well with my outfit that day!
                     </Text>
                     </View>
                     
@@ -238,10 +236,10 @@ function RecommendedCard({ item }) {
                         <Ionicons name="star" size={16} color="#F5B400" />
                         <Ionicons name="star" size={16} color="#F5B400" />
                         <Ionicons name="star" size={16} color="#F5B400" />
-                        <Text style={styles.reviewName}>Daniel K</Text>
+                        <Text style={styles.reviewName}>Vahan G</Text>
                     </View>
                     <Text style={styles.reviewText}>
-                        This is my first time renting from Broadway Boutique. My buddy, Vahan, recommended me here when I told him I wanted to learn skateboarding. This FA deck is most likely my all time favorite board to cruise around. Style is slick and it’s super beginner-friendly.
+                        They said I could get 10% off if I leave a review.
                     </Text>
                     </View>
                     <View>

@@ -343,12 +343,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 
-  bottomNav: {
+ bottomNav: {
     position: "absolute",
     bottom: 0,
-    height: 58,
+    height: 55,
     width: "100%",
-    backgroundColor: "#E6E6E6",
+    backgroundColor: "white",
+    borderTopLeftRadius: 18,
+    borderTopRightRadius: 18,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",

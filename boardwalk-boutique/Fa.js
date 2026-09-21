@@ -22,7 +22,7 @@ const BLUE = "#C8D4EE";
 const DARK = "#12345C";
 const WHITE = "#FFFFFF";
 
-export default function Fa({ setPage, addRentalItem, rentalCart }) {
+export default function Fa({ setPage, addRentalItem, rentalCart, goBack }) {
   const outerScrollRef = useRef(null);
   const [liked, setLiked] = useState(false);
   const fadeAnim = useState(new Animated.Value(0))[0];
@@ -112,9 +112,9 @@ function RecommendedCard({ item }) {
     <View style={styles.screen}>
       <ScrollView ref={outerScrollRef} contentContainerStyle={styles.scroll} nestedScrollEnabled={true}>
         <View style={styles.header}>
-          <TouchableOpacity
+         <TouchableOpacity
             style={styles.backButton}
-            onPress={() => setPage("recommendation")}
+            onPress={goBack}
           >
             <Ionicons name="chevron-back" size={34} color="black" />
           </TouchableOpacity>

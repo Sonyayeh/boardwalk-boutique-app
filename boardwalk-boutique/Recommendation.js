@@ -86,9 +86,9 @@ function ProductCard({ item, onPress }) {
   );
 }
 
-export default function Recommendation({ setPage, rentalCart }) {
+export default function Recommendation({ setPage, rentalCart, likedItems }) {
   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);
-
+  const totalLiked = likedItems.reduce((sum, item) => sum + item.quantity, 0);
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scroll}>
@@ -150,8 +150,13 @@ export default function Recommendation({ setPage, rentalCart }) {
                         <Ionicons name="add-circle-outline" size={24} />
                 </TouchableOpacity> 
                 {/* going to liked page */}
-                <TouchableOpacity onPress={() => setPage("Favourite")} >
-                        <Ionicons name="heart-outline" size={24} />
+                 <TouchableOpacity onPress={() => setPage("Favourite")}>
+                  <Ionicons name="heart-outline" size={24} />
+                  {totalLiked > 0 && (
+                    <View style={styles.bottomLikeBadge}>
+                      <Text style={styles.LikeBadgeText}>{totalLiked}</Text>
+                    </View>
+                  )}
                 </TouchableOpacity>
                 </View>
     </View>
@@ -290,4 +295,23 @@ cartBadgeText: {
   fontSize: 10,
   fontWeight: "bold",
 },
+
+LikeBadgeText: {
+    color: "white",
+    fontSize: 10,
+    fontWeight: "bold",
+  },
+
+bottomLikeBadge: {
+    position: "absolute",
+    top: -10,
+    right: -10,
+    backgroundColor: "red",
+    minWidth: 17,
+    height: 17,
+    borderRadius: 9,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 4,
+  },
 });

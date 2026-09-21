@@ -128,7 +128,7 @@ function ProductCard({ item, shop, showCartPopup, addRentalItem, showLikePopup, 
       setPage("Review");
     }
     if (item.name === "Favourite") {
-      setPage("Favourtie");
+      setPage("Favourite");
     }
   };
 
@@ -180,6 +180,20 @@ function Section({ title, children }) {
 
 export default function App() {
   const [page, setPage] = useState("home");
+  const [history, setHistory] = useState([]);
+  const navigate = (nextPage) => {
+    setHistory((prev) => [...prev, page]);
+    setPage(nextPage);
+  };
+  const goBack = () => {
+    setHistory((prev) => {
+      if (prev.length === 0) return prev;
+      const newHistory = [...prev];
+      const last = newHistory.pop();
+      setPage(last);
+      return newHistory;
+    });
+  };
   const [rentalCart, setRentalCart] = useState([]);
   const [likedItems, setLikedItems] = useState([]);
   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);   
@@ -319,41 +333,51 @@ const handleSubscribe = () => {
 if (page === "rentalInfo") {
   return (
     <RentalInfo
-      setPage={setPage}
+      setPage={navigate}
+      goBack={goBack}
       rentalCart={rentalCart}
-      increaseItem={increaseItem}
-      decreaseItem={decreaseItem}
-      deleteItem={deleteItem}
+      likedItems={likedItems}
+      addLikeItem={addLikeItem}
+      showLikePopup={showLikePopup}
     />
   );
 }
 
 if (page === "recommendation") {
-  return <Recommendation setPage={setPage} rentalCart={rentalCart} 
-  likedItems={likedItems} 
-      setPage={setPage}
+  return <Recommendation 
+      setPage={navigate}
+      goBack={goBack}
       rentalCart={rentalCart}
       likedItems={likedItems}
       addLikeItem={addLikeItem}
       showLikePopup={showLikePopup}
+      addRentalItem={addRentalItem} 
+      rentalCart={rentalCart} 
+      likedItems={likedItems} 
   />;
 }
 
 if (page === "shop") {
-  return <Shop setPage={setPage} rentalCart={rentalCart} likedItems={likedItems} 
-      setPage={setPage}
+  return (
+    <Shop
+      setPage={navigate}
+      goBack={goBack}
       rentalCart={rentalCart}
       likedItems={likedItems}
       addLikeItem={addLikeItem}
       showLikePopup={showLikePopup}
-  
-  />;
+      addRentalItem={addRentalItem} 
+      rentalCart={rentalCart} 
+      likedItems={likedItems} 
+    />
+  );
 }
 
 if (page === "Fa") {
    return <Fa setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} 
    likedItems={likedItems} 
       setPage={setPage}
+      goBack={goBack}
       rentalCart={rentalCart}
       likedItems={likedItems}
       addLikeItem={addLikeItem}
@@ -361,19 +385,28 @@ if (page === "Fa") {
    />;
 }
 if (page === "Orange") {
-    return <Orange setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} 
-    likedItems={likedItems} 
-      setPage={setPage}
+  return (
+    <Orange
+      setPage={navigate}
+      goBack={goBack}
+      addRentalItem={addRentalItem}
       rentalCart={rentalCart}
       likedItems={likedItems}
       addLikeItem={addLikeItem}
+      removeLikeItem={removeLikeItem}
       showLikePopup={showLikePopup}
-    />;
+      showRemovePopup={showRemovePopup}
+      likeFadeAnim={likeFadeAnim}
+      removeFadeAnim={removeFadeAnim}
+    />
+  );
 }
+
 if (page === "Pom") {
-  return <Pompom setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} 
+    return <Pompom setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} 
   likedItems={likedItems} 
       setPage={setPage}
+      goBack={goBack}
       rentalCart={rentalCart}
       likedItems={likedItems}
       addLikeItem={addLikeItem}
@@ -389,6 +422,7 @@ if (page === "Favourite") {
   return (
     <Favourite
       setPage={setPage}
+      goBack={goBack}
       rentalCart={rentalCart}
       likedItems={likedItems}
       deleteItem={deleteLikedItem}
@@ -407,11 +441,11 @@ if (page === "Favourite") {
 
         <View style={styles.tabs}>
          <View style={styles.tabs}>
-  <TouchableOpacity style={styles.tab} onPress={() => setPage("shop")}>
+  <TouchableOpacity style={styles.tab} onPress={() => navigate("shop")}>
     <Text style={styles.tabText}>Shop</Text>
   </TouchableOpacity>
 
-  <TouchableOpacity style={styles.tab} onPress={() => setPage("recommendation")}>
+  <TouchableOpacity style={styles.tab} onPress={() => navigate("recommendation")}>
     <Text style={styles.tabText}>Rental</Text>
   </TouchableOpacity>
 </View>
@@ -457,7 +491,7 @@ if (page === "Favourite") {
         showRemovePopup={showRemovePopup}
         addLikeItem={addLikeItem}
         removeLikeItem={removeLikeItem}
-        setPage={setPage}
+        setPage={navigate}
       />
     ))}
   </View>
@@ -476,29 +510,12 @@ if (page === "Favourite") {
         showRemovePopup={showRemovePopup}
         addLikeItem={addLikeItem}
         removeLikeItem={removeLikeItem}
-        setPage={setPage}
+        setPage={navigate}
       />
     ))}
   </View>
 </Section>
 
-<Section title="Liked Items">
-  <View style={styles.row}>
-    {rentalItems.map((item) => (
-      <ProductCard
-        key={item.type}
-        item={item}
-        showCartPopup={showCartPopup}
-        addRentalItem={addRentalItem}
-        showLikePopup={showLikePopup}
-        showRemovePopup={showRemovePopup}
-        addLikeItem={addLikeItem}
-        removeLikeItem={removeLikeItem}
-        setPage={setPage}
-      />
-    ))}
-  </View>
-</Section>
 
 <Section title="Recently Viewed">
   <View style={styles.row}>
@@ -512,13 +529,13 @@ if (page === "Favourite") {
         showRemovePopup={showRemovePopup}
         addLikeItem={addLikeItem}
         removeLikeItem={removeLikeItem}
-        setPage={setPage}
+        setPage={navigate}
       />
     ))}
   </View>
 
 
-          <TouchableOpacity onPress={() => setPage("recommendation")}>
+          <TouchableOpacity onPress={() => navigate("recommendation")}>
             <Text style={styles.more}>More...</Text>
           </TouchableOpacity>
         </Section>
@@ -535,51 +552,13 @@ if (page === "Favourite") {
         showLikePopup={showLikePopup}
         showRemovePopup={showRemovePopup}
         addLikeItem={addLikeItem}
-        setPage={setPage}
+        setPage={navigate}
       />
           ))}
         </View>
 
         <Text style={styles.more}>More...</Text>
       </Section>
-
-        <Section title="Liked Items">
-          <View style={styles.row}>
-            {rentalItems.map((item) => (
-              <ProductCard
-                key={item.type}
-                item={item}
-                 showCartPopup={showCartPopup}
-                  addRentalItem={addRentalItem}
-                  showLikePopup={showLikePopup}
-                  showRemovePopup={showRemovePopup}
-                  addLikeItem={addLikeItem}
-                  removeLikeItem={removeLikeItem}
-                  setPage={setPage}
-              />
-            ))}
-          </View>
-
-          <Text style={styles.more}>More...</Text>
-        </Section>
-
-        <Section title="Recently Viewed">
-  <View style={styles.row}>
-    {rentalItems.map((item) => (
-      <ProductCard
-        key={item.type}
-        item={item}
-         showCartPopup={showCartPopup}
-        addRentalItem={addRentalItem}
-        showLikePopup={showLikePopup}
-        showRemovePopup={showRemovePopup}
-        addLikeItem={addLikeItem}
-        removeLikeItem={removeLikeItem}
-        setPage={setPage}
-      />
-            ))}
-          </View>
-        </Section>
 
         <Text style={styles.sectionTitle}>About Us</Text>
 
@@ -683,11 +662,11 @@ if (page === "Favourite") {
 
      <View style={styles.bottomNav}>
         {/* the home button */}
-        <TouchableOpacity onPress={() => setPage("home")} >
+        <TouchableOpacity onPress={() => navigate("home")} >
                   <Ionicons name="home-outline" size={24} />
         </TouchableOpacity>
         {/* the shopping cart */}
-        <TouchableOpacity onPress={() => setPage("rentalInfo")}>
+        <TouchableOpacity onPress={() => navigate("rentalInfo")}>
           <View>
             <Ionicons name="cart-outline" size={24} />
             {totalItems > 0 && (
@@ -699,12 +678,12 @@ if (page === "Favourite") {
         </TouchableOpacity>
         
           {/* go to the recommendation page */}
-          <TouchableOpacity onPress={() => setPage("recommendation")}>
+          <TouchableOpacity onPress={() => navigate("recommendation")}>
                   <Ionicons name="add-circle-outline" size={24} />
           </TouchableOpacity> 
 
           {/* going to liked page */}
-          <TouchableOpacity onPress={() => setPage("Favourite")} >
+          <TouchableOpacity onPress={() => navigate("Favourite")} >
                   <Ionicons name="heart-outline" size={24} />
                    {totalLiked > 0 && (
               <View style={styles.bottomLikeBadge}>

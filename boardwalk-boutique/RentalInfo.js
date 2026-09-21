@@ -21,9 +21,10 @@ export default function RentalInfo({
   increaseItem,
   decreaseItem,
   deleteItem,
+  likedItems,
 }) {
-   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);   // this line shows how much item is in the shopping cart
-
+  const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);
+  const totalLiked = likedItems.reduce((sum, item) => sum + item.quantity, 0);
   const getNumberFromPrice = (price) => {
     return Number(price.replace(/[^0-9.]/g, ""));
   };
@@ -153,9 +154,14 @@ export default function RentalInfo({
                                              <Ionicons name="add-circle-outline" size={24} />
                                      </TouchableOpacity> 
                                      {/* going to liked page */}
-                                     <TouchableOpacity onPress={() => setPage("Favourite")} >
-                                             <Ionicons name="heart-outline" size={24} />
-                                     </TouchableOpacity>
+                                     <TouchableOpacity onPress={() => setPage("Favourite")}>
+  <Ionicons name="heart-outline" size={24} />
+  {totalLiked > 0 && (
+    <View style={styles.bottomLikeBadge}>
+      <Text style={styles.LikeBadgeText}>{totalLiked}</Text>
+    </View>
+  )}
+</TouchableOpacity>
                                      </View>
     </View>
   );
@@ -233,6 +239,25 @@ cartBadgeText: {
   fontSize: 10,
   fontWeight: "bold",
 },
+
+LikeBadgeText: {
+    color: "white",
+    fontSize: 10,
+    fontWeight: "bold",
+  },
+
+  bottomLikeBadge: {
+    position: "absolute",
+    top: -10,
+    right: -10,
+    backgroundColor: "red",
+    minWidth: 17,
+    height: 17,
+    borderRadius: 9,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 4,
+  },
 
 
   content: {
