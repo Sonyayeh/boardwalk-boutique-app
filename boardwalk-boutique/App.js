@@ -339,6 +339,9 @@ if (page === "rentalInfo") {
       likedItems={likedItems}
       addLikeItem={addLikeItem}
       showLikePopup={showLikePopup}
+      increaseItem={increaseItem}
+      decreaseItem={decreaseItem}
+      deleteItem={deleteItem}
     />
   );
 }
