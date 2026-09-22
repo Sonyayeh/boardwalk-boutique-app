@@ -375,13 +375,13 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 28,
+    fontSize: 23,
     color: DARK,
     fontWeight: "bold",
     fontFamily: "serif",
-    textAlign: "center",
+    textAlign: "left",
     marginVertical: 24,
-    
+    paddingLeft: 20,
   },
 
   description:{

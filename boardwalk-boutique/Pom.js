@@ -374,14 +374,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
 
-  title: {
-    fontSize: 28,
+   title: {
+    fontSize: 23,
     color: DARK,
     fontWeight: "bold",
     fontFamily: "serif",
-    textAlign: "center",
+    textAlign: "left",
     marginVertical: 24,
-    
+    paddingLeft: 20,
   },
 
   description:{
@@ -496,7 +496,7 @@ reviewCount: {
 
   book: {
     backgroundColor: DARK,
-    width: "55%",
+    width: "60%",
     borderRadius: 8,
     marginLeft: 20,
     flexDirection: "row",
@@ -517,14 +517,14 @@ reviewCount: {
     fontWeight: "bold",
     fontFamily: "serif",
     textAlign: "left",
-    paddingHorizontal: 15,
+    paddingHorizontal: 4,
     marginVertical: 10,
   },
 
   icon: {
     alignItems: "center",
     justifyContent: "center",
-    paddingRight: 70,
+    paddingRight: 8,
   },
 
   list: {
