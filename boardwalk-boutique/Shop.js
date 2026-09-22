@@ -52,18 +52,21 @@ const items = [
     detail: "Standard",
     price: "$4.00/hr",
     image: OrangeBoard,
+    page: "Orange",
   },
   {
     name: "Girl\nSkateboard",
     detail: "PomPomPurin",
     price: "$5.00/hr",
     image: PompomBoard,
+    page: "Pom",
   },
   {
     name: "FA",
-    detail: "",
+    detail: "The Pink Board",
     price: "$15.00/hr",
     image: PinkBoard,
+    page: "Fa",
   },
   {
     name: "Dustin\nHenry",
@@ -84,12 +87,6 @@ const items = [
     image: MosaicBoard,
   },
 ];
-
-const pageMap = {
-  [PinkBoard]: "Fa",
-  [OrangeBoard]: "Orange",
-  [PompomBoard]: "Pom",
-};
 
 function ProductCard({ item, onPress, addLikeItem, showLikePopup }) {
   const [liked, setLiked] = useState(false);
@@ -120,9 +117,9 @@ function ProductCard({ item, onPress, addLikeItem, showLikePopup }) {
         <Ionicons name="cart-outline" size={20} color="black" />
       </View>
       <Text style={styles.productName}>{item.name}</Text>
-      {item.detail ? <Text style={styles.detail}>{item.detail}</Text> : null}
-      <Text style={styles.price}>{item.price}</Text>
-      {!item.detail ? <Text style={styles.viewDetails}>View Details</Text> : null}
+{item.detail ? <Text style={styles.detail}>{item.detail}</Text> : <View style={{ height: 34 }} />}
+<Text style={styles.price}>{item.price}</Text>
+{item.page && !item.detail ? <Text style={styles.viewDetails}>View Details</Text> : null}
     </TouchableOpacity>
   );
 }
@@ -163,12 +160,12 @@ export default function Shop({ setPage, rentalCart, likedItems, addLikeItem }) {
         <Text style={styles.title}> Boardwalk Shop:</Text>
         <Text style={styles.sub}>Popular Rental Boards:</Text>
 
-        <View style={styles.grid}>
+       <View style={styles.grid}>
           {items.map((item, index) => (
             <ProductCard
               key={index}
               item={item}
-              onPress={pageMap[item.image] ? () => setPage(pageMap[item.image]) : undefined}
+              onPress={item.page ? () => setPage(item.page) : undefined}
               addLikeItem={addLikeItem}
               showLikePopup={showLikePopup}
             />
@@ -177,12 +174,12 @@ export default function Shop({ setPage, rentalCart, likedItems, addLikeItem }) {
 
         <Text style={styles.sub}>Hottest Apparels:</Text>
 
-        <View style={styles.grid}>
+       <View style={styles.grid}>
           {clothes.map((item, index) => (
             <ProductCard
               key={index}
               item={item}
-              onPress={pageMap[item.image] ? () => setPage(pageMap[item.image]) : undefined}
+              onPress={undefined}
               addLikeItem={addLikeItem}
               showLikePopup={showLikePopup}
             />
@@ -312,14 +309,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  productName: {
-    marginTop: 12,
-    color: DARK,
-    fontSize: 15,
-    lineHeight: 16,
-    textAlign: "center",
-    fontFamily: "serif",
-  },
+ productName: {
+  marginTop: 12,
+  color: DARK,
+  fontSize: 15,
+  lineHeight: 16,
+  height: 32,
+  textAlign: "center",
+  fontFamily: "serif",
+},
 
   detail: {
     marginTop: 22,
