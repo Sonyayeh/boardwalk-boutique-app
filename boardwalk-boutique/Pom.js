@@ -145,37 +145,32 @@ function RecommendedCard({ item }) {
           />
 
         </View>
-          <Text style={styles.title}>
-            Girl Skateboards 
-          </Text>
-          <View style={styles.priceRow}>
-            <Text style={styles.price}>$5.00/hr</Text>
-            <StarRating rating={4} reviewCount={352} />
-          </View>
-             <TouchableOpacity
+         <View style={styles.bookRow}>
+            <TouchableOpacity
               style={styles.book}
               onPress={() => {
-              addRentalItem({
-                name: "Girl\nSkateboard",
-                type: "PomPomPurin",
-                price: "$5.00/hr",
-                image: PompomBoard,
-              });
-              showCartPopup();
-            }}
+                addRentalItem({
+                  name: "Girl\nSkateboard",
+                  type: "PomPomPurin",
+                  price: "$5.00/hr",
+                  image: PompomBoard,
+                });
+                showCartPopup();
+              }}
             >
            <Text style={styles.booktext}>Book Now</Text>
-            <View style={styles.icon}>
-              <Ionicons name="cart-outline" size={30} color="white" />
-            </View>
-              <TouchableOpacity onPress={() => setLiked(!liked)}>
-                <View style={styles.heart}>
-                  <Ionicons name="heart-outline" size={30} 
-                  name={liked ? "heart" : "heart-outline"}
-                  color={liked ? "red" : "black"}/>
-            </View>
-              </TouchableOpacity>
+              <View style={styles.icon}>
+                <Ionicons name="cart-outline" size={30} color="white" />
+              </View>
+            </TouchableOpacity>
+              <TouchableOpacity style={styles.heart} onPress={() => setLiked(!liked)}>
+              <Ionicons
+                name={liked ? "heart" : "heart-outline"}
+                size={30}
+                color={liked ? "red" : "black"}
+              />
                 </TouchableOpacity>
+            </View>
                 <View>
                     <Text style={styles.title}>
                         Description:
@@ -494,22 +489,26 @@ reviewCount: {
   color: DARK,
 },
 
-  book: {
-    backgroundColor: DARK,
-    width: "75%",
-    borderRadius: 8,
-    marginLeft: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-  },
+bookRow: {
+  flexDirection: "row",
+  alignItems: "center",
+  paddingLeft: 20,
+},
 
-  heart: {
-    paddingHorizontal: 6,
-    marginTop: 12,
-  },
+  book: {
+  backgroundColor: DARK,
+  width: "75%",
+  borderRadius: 8,
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between",
+  paddingHorizontal: 10,
+  paddingVertical: 8,
+},
+
+heart: {
+  marginLeft: 16,
+},
   
   booktext: {
     fontSize: 20,
