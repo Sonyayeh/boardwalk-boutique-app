@@ -30,7 +30,8 @@ export default function Pompom({ setPage, addRentalItem, rentalCart, goBack, lik
   const outerScrollRef = useRef(null);
   const [liked, setLiked] = useState(false);
   const fadeAnim = useState(new Animated.Value(0))[0];
-  const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0); 
+  const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);
+const totalLiked = likedItems.reduce((sum, item) => sum + item.quantity, 0);
 
   const showCartPopup = () => {
     Animated.sequence([
