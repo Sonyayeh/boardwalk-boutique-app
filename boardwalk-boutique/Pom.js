@@ -496,7 +496,7 @@ reviewCount: {
 
   book: {
     backgroundColor: DARK,
-    width: "60%",
+    width: "75%",
     borderRadius: 8,
     marginLeft: 20,
     flexDirection: "row",
@@ -519,7 +519,7 @@ reviewCount: {
     textAlign: "left",
     paddingHorizontal: 4,
     marginVertical: 10,
-    width: 250,
+    width: 30,
   },
 
   icon: {
