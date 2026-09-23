@@ -588,7 +588,7 @@ location: {
 locationText: {
   fontSize: 13,
   color: DARK,
-  width: 150,
+  width: 120,
 },
 
 locationColumn: {
@@ -604,8 +604,8 @@ mapText: {
 },
 
 mapImage: {
-  width: 140,
-  height: 110,
+  width: 100,
+  height: 90,
   borderRadius: 8,
   marginRight: 15,
 },
