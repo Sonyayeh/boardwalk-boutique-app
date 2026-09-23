@@ -507,7 +507,7 @@ reviewCount: {
   },
 
   heart: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 6,
     marginTop: 12,
   },
   
