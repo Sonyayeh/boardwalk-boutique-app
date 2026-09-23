@@ -25,7 +25,8 @@ const BLUE = "#C8D4EE";
 const DARK = "#12345C";
 const WHITE = "#FFFFFF";
 
-export default function Pompom({ setPage, addRentalItem, rentalCart, goBack }) {
+export default function Pompom({ setPage, addRentalItem, rentalCart, goBack, likedItems, addLikeItem, removeLikeItem, showLikePopup, showRemovePopup,
+  likeFadeAnim, removeFadeAnim, }) {
   const outerScrollRef = useRef(null);
   const [liked, setLiked] = useState(false);
   const fadeAnim = useState(new Animated.Value(0))[0];
@@ -163,13 +164,32 @@ function RecommendedCard({ item }) {
                 <Ionicons name="cart-outline" size={30} color="white" />
               </View>
             </TouchableOpacity>
-              <TouchableOpacity style={styles.heart} onPress={() => setLiked(!liked)}>
-              <Ionicons
-                name={liked ? "heart" : "heart-outline"}
-                size={30}
-                color={liked ? "red" : "black"}
-              />
-                </TouchableOpacity>
+              <TouchableOpacity
+  style={styles.heart}
+  onPress={() => {
+    if (liked) {
+      if (removeLikeItem) removeLikeItem({ type: "PomPomPurin" });
+      if (showRemovePopup) showRemovePopup();
+    } else {
+      if (addLikeItem) {
+        addLikeItem({
+          name: "Girl\nSkateboard",
+          type: "PomPomPurin",
+          price: "$5.00/hr",
+          image: PompomBoard,
+        });
+      }
+      if (showLikePopup) showLikePopup();
+    }
+    setLiked(!liked);
+  }}
+>
+  <Ionicons
+    name={liked ? "heart" : "heart-outline"}
+    size={30}
+    color={liked ? "red" : "black"}
+  />
+</TouchableOpacity>
             </View>
                 <View>
                     <Text style={styles.title}>
@@ -294,6 +314,23 @@ function RecommendedCard({ item }) {
                 <Text style={styles.centerPopupText}>Item added to cart!</Text>
               </View>
             </Animated.View>
+            <Animated.View
+  pointerEvents="none"
+  style={[styles.screenPopup, { opacity: likeFadeAnim }]}
+>
+  <View style={styles.popupBox}>
+    <Text style={styles.centerPopupText}>Added to Favourites!</Text>
+  </View>
+</Animated.View>
+
+<Animated.View
+  pointerEvents="none"
+  style={[styles.screenPopup, { opacity: removeFadeAnim }]}
+>
+  <View style={styles.popupBox}>
+    <Text style={styles.centerPopupText}>Removed from Favourites.</Text>
+  </View>
+</Animated.View>
 
        <View style={styles.bottomNav}>
                      {/* the home button */}
@@ -493,6 +530,7 @@ bookRow: {
   flexDirection: "row",
   alignItems: "center",
   paddingLeft: 20,
+  paddingTop: 20,
 },
 
   book: {

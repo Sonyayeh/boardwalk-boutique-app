@@ -406,15 +406,21 @@ if (page === "Orange") {
 }
 
 if (page === "Pom") {
-    return <Pompom setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} 
-  likedItems={likedItems} 
-      setPage={setPage}
+  return (
+    <Pompom
+      setPage={navigate}
       goBack={goBack}
+      addRentalItem={addRentalItem}
       rentalCart={rentalCart}
       likedItems={likedItems}
       addLikeItem={addLikeItem}
+      removeLikeItem={removeLikeItem}
       showLikePopup={showLikePopup}
-  />;
+      showRemovePopup={showRemovePopup}
+      likeFadeAnim={likeFadeAnim}
+      removeFadeAnim={removeFadeAnim}
+    />
+  );
 }
 
 if (page === "Review") {
