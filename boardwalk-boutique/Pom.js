@@ -519,7 +519,7 @@ reviewCount: {
     textAlign: "left",
     paddingHorizontal: 4,
     marginVertical: 10,
-    width: 150,
+    width: 250,
   },
 
   icon: {
