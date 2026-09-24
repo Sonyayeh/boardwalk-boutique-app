@@ -298,8 +298,8 @@ const styles = StyleSheet.create({
   },
 
   boardImage: {
-    width: 92,
-    height: 178,
+    width: 60,
+    height: 150,
   },
 
   iconGroup: {
