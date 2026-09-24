@@ -164,39 +164,40 @@ export default function Orange({
             />
           </View>
           <Text style={styles.title}>
-            Girl Skateboards
-          </Text>
-          <View style={styles.priceRow}>
-            <Text style={styles.price}>$4.00/hr</Text>
-            <StarRating rating={4} reviewCount={352} />
-          </View>
+  Girl Skateboards
+</Text>
+<View style={styles.priceRow}>
+  <Text style={styles.price}>$4.00/hr</Text>
+  <StarRating rating={4} reviewCount={352} />
+</View>
 
-          <TouchableOpacity
-            style={styles.book}
-            onPress={() => {
-              addRentalItem({
-                name: "Girl\nSkateboard",
-                type: "Standard",
-                price: "$4.00/hr",
-                image: OrangeBoard,
-              });
-              showCartPopup();
-            }}
-          >
-            <Text style={styles.booktext}>Book Now</Text>
-            <View style={styles.icon}>
-              <Ionicons name="cart-outline" size={30} color="white" />
-            </View>
-            <TouchableOpacity onPress={handleLikeItem}>
-              <View style={styles.heart}>
-                <Ionicons
-                  name={liked ? "heart" : "heart-outline"}
-                  size={30}
-                  color={liked ? "red" : "black"}
-                />
-              </View>
-            </TouchableOpacity>
-          </TouchableOpacity>
+<View style={styles.bookRow}>
+  <TouchableOpacity
+    style={styles.book}
+    onPress={() => {
+      addRentalItem({
+        name: "Girl\nSkateboard",
+        type: "Standard",
+        price: "$4.00/hr",
+        image: OrangeBoard,
+      });
+      showCartPopup();
+    }}
+  >
+    <Text style={styles.booktext}>Book Now</Text>
+    <View style={styles.icon}>
+      <Ionicons name="cart-outline" size={30} color="white" />
+    </View>
+  </TouchableOpacity>
+
+  <TouchableOpacity style={styles.heart} onPress={handleLikeItem}>
+    <Ionicons
+      name={liked ? "heart" : "heart-outline"}
+      size={30}
+      color={liked ? "red" : "black"}
+    />
+  </TouchableOpacity>
+</View>
 
           <View>
             <Text style={styles.title}>
@@ -574,10 +575,16 @@ book: {
   paddingHorizontal: 10,
   paddingVertical: 8,
 },
-  heart: {
-    paddingHorizontal: 24,
-    marginTop: 12,
-  },
+  bookRow: {
+  flexDirection: "row",
+  alignItems: "center",
+  paddingLeft: 20,
+  paddingTop: 20,
+},
+
+heart: {
+  marginLeft: 16,
+},
 
   bottomLikeBadge: {
     position: "absolute",
@@ -597,6 +604,7 @@ book: {
     fontSize: 10,
     fontWeight: "bold",
   },
+
 booktext: {
     fontSize: 20,
     color: WHITE,
