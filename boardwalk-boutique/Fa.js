@@ -22,11 +22,16 @@ const BLUE = "#C8D4EE";
 const DARK = "#12345C";
 const WHITE = "#FFFFFF";
 
-export default function Fa({ setPage, addRentalItem, rentalCart, goBack }) {
+export default function Fa({
+  setPage, addRentalItem, rentalCart, goBack, likedItems,
+  addLikeItem, removeLikeItem, showLikePopup, showRemovePopup,
+  likeFadeAnim, removeFadeAnim,
+}) {
   const outerScrollRef = useRef(null);
   const [liked, setLiked] = useState(false);
   const fadeAnim = useState(new Animated.Value(0))[0];
-  const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0); 
+  const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);
+const totalLiked = likedItems.reduce((sum, item) => sum + item.quantity, 0);
 
 
   const showCartPopup = () => {
@@ -146,32 +151,52 @@ function RecommendedCard({ item }) {
             <Text style={styles.price}>$15.00/hr</Text>
             <StarRating rating={4} reviewCount={352} />
           </View>
-           <TouchableOpacity
-              style={styles.book}
-              onPress={() => {
-                addRentalItem({
-                  name: "FA",
-                  type: "Deck Store Collage",
-                  price: "$15.00/hr",
-                  image: PinkBoard,
-                });
-                showCartPopup();
-              }}
-            >
-                  <Text style={styles.booktext}>Book Now</Text>
-                  <View style={styles.icon}>
-                   <Ionicons name="cart-outline" size={30} color="white" />
-                  </View>
-                    <TouchableOpacity onPress={() => setLiked(!liked)}>
-                 <View style={styles.heart}>
-                        <Ionicons name="heart-outline" size={30} 
-                        name={liked ? "heart" : "heart-outline"}
-                        color={liked ? "red" : "black"}
-                        />
-                </View>
-                    </TouchableOpacity>
-                
-                </TouchableOpacity>
+           <View style={styles.bookRow}>
+  <TouchableOpacity
+    style={styles.book}
+    onPress={() => {
+      addRentalItem({
+        name: "FA",
+        type: "Deck Store Collage",
+        price: "$15.00/hr",
+        image: PinkBoard,
+      });
+      showCartPopup();
+    }}
+  >
+    <Text style={styles.booktext}>Book Now</Text>
+    <View style={styles.icon}>
+      <Ionicons name="cart-outline" size={30} color="white" />
+    </View>
+  </TouchableOpacity>
+
+  <TouchableOpacity
+    style={styles.heart}
+    onPress={() => {
+      if (liked) {
+        if (removeLikeItem) removeLikeItem({ type: "Deck Store Collage" });
+        if (showRemovePopup) showRemovePopup();
+      } else {
+        if (addLikeItem) {
+          addLikeItem({
+            name: "FA",
+            type: "Deck Store Collage",
+            price: "$15.00/hr",
+            image: PinkBoard,
+          });
+        }
+        if (showLikePopup) showLikePopup();
+      }
+      setLiked(!liked);
+    }}
+  >
+    <Ionicons
+      name={liked ? "heart" : "heart-outline"}
+      size={30}
+      color={liked ? "red" : "black"}
+    />
+  </TouchableOpacity>
+</View>
                 <View>
                     <Text style={styles.title}>
                         Description:
@@ -297,6 +322,17 @@ function RecommendedCard({ item }) {
                     <Text style={styles.centerPopupText}>Item added to cart!</Text>
                   </View>
       </Animated.View>
+      <Animated.View pointerEvents="none" style={[styles.screenPopup, { opacity: likeFadeAnim }]}>
+  <View style={styles.popupBox}>
+    <Text style={styles.centerPopupText}>Added to Favourites!</Text>
+  </View>
+</Animated.View>
+
+<Animated.View pointerEvents="none" style={[styles.screenPopup, { opacity: removeFadeAnim }]}>
+  <View style={styles.popupBox}>
+    <Text style={styles.centerPopupText}>Removed from Favourites.</Text>
+  </View>
+</Animated.View>
 
 
         <View style={styles.bottomNav}>
@@ -318,9 +354,14 @@ function RecommendedCard({ item }) {
                                        <Ionicons name="add-circle-outline" size={24} />
                                </TouchableOpacity> 
                                {/* going to liked page */}
-                               <TouchableOpacity onPress={() => setPage("Favourite")} >
-                                       <Ionicons name="heart-outline" size={24} />
-                               </TouchableOpacity>
+                              <TouchableOpacity onPress={() => setPage("Favourite")}>
+  <Ionicons name="heart-outline" size={24} />
+  {totalLiked > 0 && (
+    <View style={styles.bottomLikeBadge}>
+      <Text style={styles.LikeBadgeText}>{totalLiked}</Text>
+    </View>
+  )}
+</TouchableOpacity>
                                </View>
                                
       </GestureHandlerRootView>
@@ -373,6 +414,64 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-around",
   },
+
+  bookRow: {
+  flexDirection: "row",
+  alignItems: "center",
+  paddingLeft: 20,
+  paddingTop: 20,
+},
+
+book: {
+  backgroundColor: DARK,
+  width: "75%",
+  borderRadius: 8,
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between",
+  paddingHorizontal: 10,
+  paddingVertical: 8,
+},
+
+heart: {
+  marginLeft: 16,
+},
+
+booktext: {
+  fontSize: 20,
+  color: WHITE,
+  fontWeight: "bold",
+  fontFamily: "serif",
+  textAlign: "left",
+  paddingHorizontal: 4,
+  marginVertical: 10,
+  width: 250,
+},
+
+icon: {
+  alignItems: "center",
+  justifyContent: "center",
+  paddingRight: 8,
+},
+
+bottomLikeBadge: {
+  position: "absolute",
+  top: -10,
+  right: -10,
+  backgroundColor: "red",
+  minWidth: 17,
+  height: 17,
+  borderRadius: 9,
+  alignItems: "center",
+  justifyContent: "center",
+  paddingHorizontal: 4,
+},
+
+LikeBadgeText: {
+  color: "white",
+  fontSize: 10,
+  fontWeight: "bold",
+},
 
   title: {
     fontSize: 23,
@@ -451,33 +550,6 @@ reviewCount: {
   color: DARK,
 },
 
-  book: {
-    backgroundColor: DARK,
-    width: "55%",
-    borderRadius: 8,
-    marginLeft: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-  },
-
-  heart: {
-    paddingHorizontal: 24,
-    marginTop: 12,
-  },
-  
-  booktext: {
-    fontSize: 20,
-    color: WHITE,
-    fontWeight: "bold",
-    fontFamily: "serif",
-    textAlign: "left",
-    paddingHorizontal: 15,
-    marginVertical: 10,
-  },
-
   screenPopup: {
   position: "absolute",
   top: 0,
@@ -520,12 +592,6 @@ cartBadgeText: {
   fontSize: 10,
   fontWeight: "bold",
 },
-
-  icon: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingRight: 70,
-  },
 
   list: {
   paddingHorizontal: 24,

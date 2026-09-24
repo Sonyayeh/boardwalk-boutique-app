@@ -377,15 +377,21 @@ if (page === "shop") {
 }
 
 if (page === "Fa") {
-   return <Fa setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} 
-   likedItems={likedItems} 
-      setPage={setPage}
+  return (
+    <Fa
+      setPage={navigate}
       goBack={goBack}
+      addRentalItem={addRentalItem}
       rentalCart={rentalCart}
       likedItems={likedItems}
       addLikeItem={addLikeItem}
+      removeLikeItem={removeLikeItem}
       showLikePopup={showLikePopup}
-   />;
+      showRemovePopup={showRemovePopup}
+      likeFadeAnim={likeFadeAnim}
+      removeFadeAnim={removeFadeAnim}
+    />
+  );
 }
 if (page === "Orange") {
   return (
