@@ -618,7 +618,7 @@ booktext: {
   icon: {
     alignItems: "center",
     justifyContent: "center",
-    paddingRight: 70,
+    paddingRight: 8,
   },
 
   list: {
