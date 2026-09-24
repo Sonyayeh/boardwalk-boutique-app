@@ -101,7 +101,7 @@ function ProductCard({ item, onPress, addLikeItem, showLikePopup }) {
       <Image
         source={item.image}
         style={styles.boardImage}
-        resizeMode="contain"
+        resizeMode="cover"
       />
       <View style={styles.iconGroup}>
         <TouchableOpacity onPress={() => {
