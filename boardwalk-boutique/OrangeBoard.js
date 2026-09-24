@@ -564,18 +564,16 @@ const styles = StyleSheet.create({
     color: DARK,
   },
 
-  book: {
-    backgroundColor: DARK,
-    width: "55%",
-    borderRadius: 8,
-    marginLeft: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-  },
-
+book: {
+  backgroundColor: DARK,
+  width: "75%",
+  borderRadius: 8,
+  flexDirection: "row",
+  alignItems: "center",
+  justifyContent: "space-between",
+  paddingHorizontal: 10,
+  paddingVertical: 8,
+},
   heart: {
     paddingHorizontal: 24,
     marginTop: 12,
