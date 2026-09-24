@@ -70,17 +70,25 @@ const recommendedBoards = [
 ];
 
 function RecommendedCard({ item, likedItems, addLikeItem, removeLikeItem, showLikePopup, showRemovePopup }) {
-  const liked = likedItems.some((i) => i.name === item.name);
+  const [liked, setLiked] = useState(false);
 
   const handleLikeItem = () => {
-    if (liked) {
-      if (removeLikeItem) removeLikeItem(item);
-      if (showRemovePopup) showRemovePopup();
-    } else {
-      if (addLikeItem) addLikeItem(item);
-      if (showLikePopup) showLikePopup();
+  if (liked) {
+    if (removeLikeItem) removeLikeItem({ type: "Standard" });
+    if (showRemovePopup) showRemovePopup();
+  } else {
+    if (addLikeItem) {
+      addLikeItem({
+        name: "Girl\nSkateboard",
+        type: "Standard",
+        price: "$4.00/hr",
+        image: OrangeBoard,
+      });
     }
-  };
+    if (showLikePopup) showLikePopup();
+  }
+  setLiked(!liked);
+};
 
   return (
     <View style={styles.carouselCard}>
@@ -591,17 +599,16 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: "bold",
   },
-
-  booktext: {
+booktext: {
     fontSize: 20,
     color: WHITE,
     fontWeight: "bold",
     fontFamily: "serif",
     textAlign: "left",
-    paddingHorizontal: 15,
+    paddingHorizontal: 4,
     marginVertical: 10,
+    width: 250,
   },
-
   icon: {
     alignItems: "center",
     justifyContent: "center",
