@@ -566,6 +566,12 @@ bottomLikeBadge: {
     justifyContent: "center",
     paddingHorizontal: 4,
   },
+
+   LikeBadgeText: {
+    color: "white",
+    fontSize: 10,
+    fontWeight: "bold",
+  },
   
   booktext: {
     fontSize: 20,
