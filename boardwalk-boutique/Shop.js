@@ -304,8 +304,8 @@ const styles = StyleSheet.create({
 
   iconGroup: {
     position: "absolute",
-    right: -2,
-    top: 152,
+    right: -10,
+    top: 95,
     alignItems: "center",
   },
 
