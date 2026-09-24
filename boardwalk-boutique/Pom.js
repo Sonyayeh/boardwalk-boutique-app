@@ -145,8 +145,14 @@ function RecommendedCard({ item }) {
             style={styles.boardImage}
             resizeMode="contain"
           />
-
         </View>
+         <Text style={styles.title}>
+            Girl Skateboards 
+          </Text>
+          <View style={styles.priceRow}>
+            <Text style={styles.price}>$5.00/hr</Text>
+            <StarRating rating={4} reviewCount={169} />
+          </View>
          <View style={styles.bookRow}>
             <TouchableOpacity
               style={styles.book}
