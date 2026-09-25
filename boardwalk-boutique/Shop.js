@@ -325,20 +325,14 @@ apparelImage: {
   borderRadius: 8,
 },
 
-// iconGroup: {
-//   flexDirection: "row",
-//   gap: 10,
-//   marginTop: 8,
-//   alignSelf: "flex-end",
-//   marginRight: 8,
-// },
 
-  iconGroup: {
-    position: "absolute",
-    right: -10,
-    top: 95,
-    alignItems: "center",
-  },
+iconGroup: {
+  flexDirection: "row",
+  gap: 10,
+  marginTop: 8,
+  alignSelf: "flex-end",
+  marginRight: 8,
+},
 
  productName: {
   marginTop: 12,
