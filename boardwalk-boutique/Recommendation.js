@@ -24,37 +24,40 @@ const DARK = "#12345C";
 const items = [
   {
     name: "Girl\nSkateboard",
-    detail: "Standard",
+    type: "Standard",
     price: "$4.00/hr",
     image: OrangeBoard,
+    page: "Orange",
   },
   {
     name: "Girl\nSkateboard",
-    detail: "PomPomPurin",
+    type: "PomPomPurin",
     price: "$5.00/hr",
     image: PompomBoard,
+    page: "Pom",
   },
   {
     name: "Dustin\nHenry",
-    detail: "",
+    type: "",
     price: "$6.00/hr",
     image: BlueBoard,
   },
   {
     name: "FA",
-    detail: "",
+    type: "",
     price: "$15.00/hr",
     image: PinkBoard,
+    page: "Fa",
   },
   {
     name: "Krooked",
-    detail: "",
+    type: "",
     price: "$16.00/hr",
     image: WhiteBlueBoard,
   },
   {
     name: "FA",
-    detail: "",
+    type: "",
     price: "$16.00/hr",
     image: MosaicBoard,
   },
@@ -66,7 +69,24 @@ const pageMap = {
   [PompomBoard]: "Pom",
 };
 
-function ProductCard({ item, onPress }) {
+function ProductCard({ item, onPress, likedItems, addLikeItem, removeLikeItem, showLikePopup, showRemovePopup, addRentalItem, showCartPopup }) {
+  const liked = likedItems.some((i) => i.type === item.type);
+
+  const handleLikeItem = () => {
+    if (liked) {
+      if (removeLikeItem) removeLikeItem(item);
+      if (showRemovePopup) showRemovePopup();
+    } else {
+      if (addLikeItem) addLikeItem(item);
+      if (showLikePopup) showLikePopup();
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (addRentalItem) addRentalItem(item);
+    if (showCartPopup) showCartPopup();
+  };
+
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} disabled={!onPress}>
       <Image
@@ -75,18 +95,22 @@ function ProductCard({ item, onPress }) {
         resizeMode="contain"
       />
       <View style={styles.iconGroup}>
-        <Ionicons name="heart-outline" size={20} color="black" />
-        <Ionicons name="cart-outline" size={20} color="black" />
+        <TouchableOpacity onPress={handleLikeItem}>
+          <Ionicons name={liked ? "heart" : "heart-outline"} size={20} color={liked ? "red" : "black"} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleAddToCart}>
+          <Ionicons name="cart-outline" size={20} color="black" />
+        </TouchableOpacity>
       </View>
       <Text style={styles.productName}>{item.name}</Text>
-      {item.detail ? <Text style={styles.detail}>{item.detail}</Text> : null}
+      <Text style={styles.productType}>{item.type}</Text>
       <Text style={styles.price}>{item.price}</Text>
-      {!item.detail ? <Text style={styles.viewDetails}>View Details</Text> : null}
+      {item.page ? <Text style={styles.viewDetails}>View Details</Text> : null}
     </TouchableOpacity>
   );
 }
 
-export default function Recommendation({ setPage, rentalCart, likedItems }) {
+export default function Recommendation({ setPage, rentalCart, likedItems, addLikeItem, removeLikeItem, showLikePopup, showRemovePopup, addRentalItem, showCartPopup }) {
   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);
   const totalLiked = likedItems.reduce((sum, item) => sum + item.quantity, 0);
   return (
@@ -123,10 +147,17 @@ export default function Recommendation({ setPage, rentalCart, likedItems }) {
       <View style={styles.grid}>
         {items.map((item, index) => (
         <ProductCard
-          key={index}
-          item={item}
-          onPress={pageMap[item.image] ? () => setPage(pageMap[item.image]) : undefined}
-        />
+  key={index}
+  item={item}
+  onPress={item.page ? () => setPage(item.page) : undefined}
+  likedItems={likedItems}
+  addLikeItem={addLikeItem}
+  removeLikeItem={removeLikeItem}
+  showLikePopup={showLikePopup}
+  showRemovePopup={showRemovePopup}
+  addRentalItem={addRentalItem}
+  showCartPopup={showCartPopup}
+/>
       ))}
       </View>
       </ScrollView>
@@ -242,13 +273,30 @@ const styles = StyleSheet.create({
     fontFamily: "serif",
   },
 
-  detail: {
-    marginTop: 22,
-    color: DARK,
-    fontSize: 9,
-    lineHeight: 12,
-    textAlign: "center",
-  },
+  productName: {
+  marginTop: 12,
+  color: DARK,
+  fontSize: 12,     
+  lineHeight: 14,   
+  textAlign: "center",
+  fontFamily: "serif",
+},
+
+productType: {     
+  color: DARK,
+  textAlign: "center",
+  fontFamily: "serif",
+  fontSize: 10,
+  marginTop: 2,
+},
+
+price: {
+  marginTop: 14,
+  color: DARK,
+  fontSize: 11,      
+  textAlign: "center",
+  fontFamily: "serif", 
+},
 
   price: {
     marginTop: 14,

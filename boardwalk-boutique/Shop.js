@@ -88,12 +88,17 @@ const items = [
   },
 ];
 
-function ProductCard({ item, onPress, addLikeItem, showLikePopup, apparel }) {
-  const [liked, setLiked] = useState(false);
+function ProductCard({ item, onPress, addLikeItem, showLikePopup, apparel, likedItems, removeLikeItem, showRemovePopup }) {
+  const liked = likedItems.some((i) => i.type === item.type);
 
   const handleLikeItem = () => {
-    if (addLikeItem) addLikeItem(item);
-    if (showLikePopup) showLikePopup();
+    if (liked) {
+      if (removeLikeItem) removeLikeItem(item);
+      if (showRemovePopup) showRemovePopup();
+    } else {
+      if (addLikeItem) addLikeItem(item);
+      if (showLikePopup) showLikePopup();
+    }
   };
 
   return (
@@ -106,10 +111,7 @@ function ProductCard({ item, onPress, addLikeItem, showLikePopup, apparel }) {
         />
       </View>
       <View style={apparel ? styles.apparelIconGroup : styles.boardIconGroup}>
-  <TouchableOpacity onPress={() => {
-      setLiked(!liked);
-      handleLikeItem();
-    }}>
+  <TouchableOpacity onPress={handleLikeItem}>
     <Ionicons
       name={liked ? "heart" : "heart-outline"}
       size={20}
@@ -126,7 +128,7 @@ function ProductCard({ item, onPress, addLikeItem, showLikePopup, apparel }) {
   );
 }
 
-export default function Shop({ setPage, rentalCart, likedItems, addLikeItem }) {
+export default function Shop({ setPage, rentalCart, likedItems, addLikeItem, removeLikeItem, showRemovePopup }) {
   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);
   const totalLiked = likedItems.reduce((sum, item) => sum + item.quantity, 0);
   const likeFadeAnim = useState(new Animated.Value(0))[0];
@@ -165,12 +167,15 @@ export default function Shop({ setPage, rentalCart, likedItems, addLikeItem }) {
        <View style={styles.grid}>
           {items.map((item, index) => (
             <ProductCard
-              key={index}
-              item={item}
-              onPress={item.page ? () => setPage(item.page) : undefined}
-              addLikeItem={addLikeItem}
-              showLikePopup={showLikePopup}
-            />
+  key={index}
+  item={item}
+  onPress={item.page ? () => setPage(item.page) : undefined}
+  addLikeItem={addLikeItem}
+  showLikePopup={showLikePopup}
+  likedItems={likedItems}
+  removeLikeItem={removeLikeItem}
+  showRemovePopup={showRemovePopup}
+/>
           ))}
         </View>
 
@@ -179,13 +184,15 @@ export default function Shop({ setPage, rentalCart, likedItems, addLikeItem }) {
        <View style={styles.grid}>
   {clothes.map((item, index) => (
     <ProductCard
-      key={index}
-      item={item}
-      onPress={undefined}
-      addLikeItem={addLikeItem}
-      showLikePopup={showLikePopup}
-      apparel
-    />
+  key={index}
+  item={item}
+  onPress={item.page ? () => setPage(item.page) : undefined}
+  addLikeItem={addLikeItem}
+  showLikePopup={showLikePopup}
+  likedItems={likedItems}
+  removeLikeItem={removeLikeItem}
+  showRemovePopup={showRemovePopup}
+/>
   ))}
 </View>
       </ScrollView>

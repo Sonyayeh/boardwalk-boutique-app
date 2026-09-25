@@ -93,14 +93,14 @@ const shopItems = [
   },
 ];
 
-function ProductCard({ item, shop, showCartPopup, addRentalItem, showLikePopup, showRemovePopup, addLikeItem, removeLikeItem, setPage }) {
-  const [liked, setLiked] = useState(false);
+function ProductCard({ item, shop, showCartPopup, addRentalItem, showLikePopup, showRemovePopup, addLikeItem, removeLikeItem, setPage, likedItems }) {
+  const liked = likedItems.some((i) => i.type === item.type);
 
   const handleAddToCart = () => {
     if (addRentalItem) addRentalItem(item);
     showCartPopup();
   };
-  
+
   const handleLikeItem = () => {
     if (liked) {
       if (removeLikeItem) removeLikeItem(item);
@@ -109,21 +109,18 @@ function ProductCard({ item, shop, showCartPopup, addRentalItem, showLikePopup, 
       if (addLikeItem) addLikeItem(item);
       if (showLikePopup) showLikePopup();
     }
-    setLiked(!liked);
   };
+
   const handleCardPress = () => {
     if (item.image === PinkBoard) {
       setPage("Fa");
     }
-
     if (item.image === OrangeBoard) {
       setPage("Orange");
     }
-
     if (item.image === PompomBoard) {
       setPage("Pom");
     }
-
     if (item.name === "Review") {
       setPage("Review");
     }
@@ -347,17 +344,20 @@ if (page === "rentalInfo") {
 }
 
 if (page === "recommendation") {
-  return <Recommendation 
+  return (
+    <Recommendation
       setPage={navigate}
       goBack={goBack}
       rentalCart={rentalCart}
       likedItems={likedItems}
       addLikeItem={addLikeItem}
+      removeLikeItem={removeLikeItem}
       showLikePopup={showLikePopup}
-      addRentalItem={addRentalItem} 
-      rentalCart={rentalCart} 
-      likedItems={likedItems} 
-  />;
+      showRemovePopup={showRemovePopup}
+      addRentalItem={addRentalItem}
+      showCartPopup={showCartPopup}
+    />
+  );
 }
 
 if (page === "shop") {
