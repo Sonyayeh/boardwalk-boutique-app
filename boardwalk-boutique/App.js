@@ -54,19 +54,19 @@ const brands = [
 const rentalItems = [
    {
       name: "FA",
-      type: "Deck Store Collage",
+      type: "Store Collage Deck",
       price: "$15.00/hr",
       image: PinkBoard,
     },
   {
     name: "Girl Skateboards",
-    type: "Rickk Howard",
+    type: "Hello Kitty and Friends Gass Pompompurin",
     price: "$5.00/hr",
     image: PompomBoard,
   },
   {
     name: "Dustin Henry",
-    type: "1995 Graphic",
+    type: "Frog Unisex",
     price: "$6.00/hr",
     image: BlueBoard,
   },

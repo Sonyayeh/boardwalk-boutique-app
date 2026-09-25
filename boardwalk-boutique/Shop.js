@@ -28,9 +28,9 @@ const DARK = "#12345C";
 const clothes = [
     {
     name: "Thrasher",
-    type: "Goat Socks",
-    price: "$15.00",
-    image: Socks,
+        type: "Goat Socks",
+        price: "$15.00",
+        image: Socks,
   },
     {
     name: "Bronze",
@@ -56,33 +56,33 @@ const items = [
   },
   {
     name: "Girl\nSkateboard",
-    detail: "PomPomPurin",
+    detail: "Hello Kitty and Friends Gass Pompompurin",
     price: "$5.00/hr",
     image: PompomBoard,
     page: "Pom",
   },
   {
     name: "FA",
-    detail: "The Pink Board",
+    detail: "Store Collage Deck",
     price: "$15.00/hr",
     image: PinkBoard,
     page: "Fa",
   },
   {
     name: "Dustin\nHenry",
-    detail: "Frog Wise One",
+    detail: "Frog Unisex",
     price: "$6.00/hr",
     image: BlueBoard,
   },
   {
     name: "Krooked",
-    detail: "Team Eyes",
+    detail: "Trio Deck",
     price: "$16.00/hr",
     image: WhiteBlueBoard,
   },
   {
     name: "FA",
-    detail: "Class Photo",
+    detail: "Statue Deck",
     price: "$16.00/hr",
     image: MosaicBoard,
   },
@@ -347,8 +347,8 @@ apparelIconGroup: {
  productName: {
   marginTop: 12,
   color: DARK,
-  fontSize: 15,
-  lineHeight: 16,
+  fontSize: 12,
+  lineHeight: 14,
   height: 32,
   textAlign: "center",
   fontFamily: "serif",
@@ -357,16 +357,18 @@ apparelIconGroup: {
   detail: {
     marginTop: 22,
     color: DARK,
-    fontSize: 9,
+    fontSize: 10,
     lineHeight: 12,
     textAlign: "center",
+    fontFamily: "serif",
   },
 
   price: {
     marginTop: 14,
     color: DARK,
-    fontSize: 16,
+    fontSize: 11,
     textAlign: "center",
+    fontFamily: "serif",
   },
 
   viewDetails: {
