@@ -801,8 +801,7 @@ tabText: {
 
   shopNow: {
     position: "absolute",
-    right: 15,
-    bottom: 15,
+    bottom: -25,
     color: "#B00000",
     fontWeight: "bold",
     fontFamily: "serif",
@@ -886,7 +885,7 @@ tabText: {
   boardIcons: {
   position: "absolute",
   right: 2,
-  top: 107,
+  top: 88,
   gap: 4,
   alignItems: "center",
 },
@@ -894,10 +893,11 @@ tabText: {
 shopIcons: {
   position: "absolute",
   right: 2,
-  top: 86,
+  top: 64,
   gap: 4,
   alignItems: "center",
 },
+
   productName: {
     color: DARK,
     textAlign: "center",
