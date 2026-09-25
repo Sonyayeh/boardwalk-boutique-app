@@ -124,6 +124,7 @@ function ProductCard({ item, onPress, addLikeItem, showLikePopup, apparel }) {
       ) : !apparel ? (
         <View style={{ height: 34 }} />
       ) : null}
+      <Text style={styles.productType}>{item.productType}</Text>
       <Text style={styles.price}>{item.price}</Text>
       {item.page && !item.detail ? <Text style={styles.viewDetails}>View Details</Text> : null}
     </TouchableOpacity>
