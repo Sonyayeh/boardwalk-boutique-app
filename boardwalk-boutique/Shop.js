@@ -49,40 +49,40 @@ const clothes = [
 const items = [
   {
     name: "Girl\nSkateboard",
-    detail: "Standard",
+    type: "Standard",
     price: "$4.00/hr",
     image: OrangeBoard,
     page: "Orange",
   },
   {
     name: "Girl\nSkateboard",
-    detail: "Gass Pompompurin",
+    type: "Gass Pompompurin",
     price: "$5.00/hr",
     image: PompomBoard,
     page: "Pom",
   },
   {
     name: "FA",
-    detail: "Store Collage Deck",
+    type: "Store Collage Deck",
     price: "$15.00/hr",
     image: PinkBoard,
     page: "Fa",
   },
   {
     name: "Dustin\nHenry",
-    detail: "Frog Unisex",
+    type: "Frog Unisex",
     price: "$6.00/hr",
     image: BlueBoard,
   },
   {
     name: "Krooked",
-    detail: "Trio Deck",
+    type: "Trio Deck",
     price: "$16.00/hr",
     image: WhiteBlueBoard,
   },
   {
     name: "FA",
-    detail: "Statue Deck",
+    type: "Statue Deck",
     price: "$16.00/hr",
     image: MosaicBoard,
   },
@@ -119,14 +119,9 @@ function ProductCard({ item, onPress, addLikeItem, showLikePopup, apparel }) {
   <Ionicons name="cart-outline" size={20} color="black" />
 </View>
       <Text style={styles.productName}>{item.name}</Text>
-      {item.detail ? (
-        <Text style={styles.detail}>{item.detail}</Text>
-      ) : !apparel ? (
-        <View style={{ height: 34 }} />
-      ) : null}
-      <Text style={styles.productType}>{item.productType}</Text>
-      <Text style={styles.price}>{item.price}</Text>
-      {item.page && !item.detail ? <Text style={styles.viewDetails}>View Details</Text> : null}
+<Text style={styles.productType}>{item.type}</Text>
+<Text style={styles.price}>{item.price}</Text>
+{item.page ? <Text style={styles.viewDetails}>View Details</Text> : null}
     </TouchableOpacity>
   );
 }
@@ -363,15 +358,6 @@ apparelIconGroup: {
     marginTop: 2,
   },
 
-
-  detail: {
-    marginTop: 22,
-    color: DARK,
-    fontSize: 10,
-    lineHeight: 12,
-    textAlign: "center",
-    fontFamily: "serif",
-  },
 
   price: {
     marginTop: 14,
