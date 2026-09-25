@@ -325,7 +325,7 @@ apparelImageWrap: {
 
 apparelImage: {
   width: "80%",
-  height: "100%",
+  height: "90%",
   borderRadius: 8,
 },
 
