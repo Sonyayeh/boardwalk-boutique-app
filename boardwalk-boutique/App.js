@@ -862,14 +862,16 @@ tabText: {
     height: 135,
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
+    width: "70",
+    alignSelf: "center",  
   },
 
   shopImage: {
-    height: 120,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
+  height: 120,
+  width: 80,   
+  justifyContent: "center",
+  alignItems: "center",
+  alignSelf: "center",
   },
 
   realBoard: {
@@ -1002,13 +1004,14 @@ emailInput: {
   backgroundColor: "#EEEEEE",
   paddingHorizontal: 14,
   fontSize: 13,
-  height: 10,
+  height: 30,
 },
 
 submitButton: {
   backgroundColor: DARK,
   justifyContent: "center",
   alignItems: "center",
+  height: 30,
 },
 
 submitButtonText: {
