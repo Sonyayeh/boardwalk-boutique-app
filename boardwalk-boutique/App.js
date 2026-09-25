@@ -54,13 +54,13 @@ const brands = [
 const rentalItems = [
    {
       name: "FA",
-      type: "Store Collage Deck",
+      type: "Store Collage",
       price: "$15.00/hr",
       image: PinkBoard,
     },
   {
     name: "Girl Skateboards",
-    type: "Gass Pompompurin",
+    type: "Pompompurin",
     price: "$5.00/hr",
     image: PompomBoard,
   },
@@ -87,7 +87,7 @@ const shopItems = [
   },
   {
     name: "TSG",
-    type: "Evolution Helmet",
+    type: "Evolution",
     price: "$85.99",
     image: Helmet,
   },
@@ -145,17 +145,17 @@ function ProductCard({ item, shop, showCartPopup, addRentalItem, showLikePopup, 
           resizeMode="contain"
         />
 
-        <View style={styles.icons}>
+        <View style={shop ? styles.shopIcons : styles.boardIcons}>
           <TouchableOpacity onPress={handleLikeItem}>
             <Ionicons
               name={liked ? "heart" : "heart-outline"}
-              size={18}
+              size={20}
               color={liked ? "red" : "black"}
             />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={handleAddToCart}>
-            <Ionicons name="cart-outline" size={18} />
+            <Ionicons name="cart-outline" size={20} />
           </TouchableOpacity>
         </View>
       </View>
@@ -476,7 +476,9 @@ if (page === "Favourite") {
               Up to 15% off on selected items in our boutique!
             </Text>
 
+            <TouchableOpacity onPress={() => navigate("shop")}>
             <Text style={styles.shopNow}>Shop Now</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -790,7 +792,7 @@ tabText: {
 
   heroText: {
     color: DARK,
-    width: 155,
+    width: 110,
     marginTop: 8,
     fontWeight: "bold",
     fontFamily: "serif",
@@ -799,8 +801,8 @@ tabText: {
 
   shopNow: {
     position: "absolute",
-    right: 28,
-    bottom: 40,
+    right: 15,
+    bottom: 15,
     color: "#B00000",
     fontWeight: "bold",
     fontFamily: "serif",
@@ -881,13 +883,21 @@ tabText: {
     height: 80,
   },
 
-  icons: {
-    position: "absolute",
-    right: 2,
-    bottom: 8,
-    gap: 2,
-  },
+  boardIcons: {
+  position: "absolute",
+  right: 2,
+  top: 107,
+  gap: 4,
+  alignItems: "center",
+},
 
+shopIcons: {
+  position: "absolute",
+  right: 2,
+  top: 86,
+  gap: 4,
+  alignItems: "center",
+},
   productName: {
     color: DARK,
     textAlign: "center",
@@ -992,11 +1002,11 @@ emailInput: {
   backgroundColor: "#EEEEEE",
   paddingHorizontal: 14,
   fontSize: 13,
+  height: 10,
 },
 
 submitButton: {
   backgroundColor: DARK,
-  paddingHorizontal: 20,
   justifyContent: "center",
   alignItems: "center",
 },

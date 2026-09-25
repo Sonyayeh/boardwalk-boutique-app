@@ -40,7 +40,7 @@ const clothes = [
   },
     {
     name: "TSG",
-        type: "Evolution Helmet",
+        type: "Evolution",
         price: "$85.99",
         image: Helmet,
   },
@@ -56,14 +56,14 @@ const items = [
   },
   {
     name: "Girl\nSkateboard",
-    type: "Gass Pompompurin",
+    type: "Pompompurin",
     price: "$5.00/hr",
     image: PompomBoard,
     page: "Pom",
   },
   {
     name: "FA",
-    type: "Store Collage Deck",
+    type: "Store Collage",
     price: "$15.00/hr",
     image: PinkBoard,
     page: "Fa",
@@ -296,8 +296,7 @@ const styles = StyleSheet.create({
   card: {
     width: "31%",
     alignItems: "center",
-    marginBottom: 88,
-    minHeight: 285,
+    marginBottom: 40,
   },
 
   boardImageWrap: {
