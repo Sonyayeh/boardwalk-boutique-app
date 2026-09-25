@@ -60,7 +60,7 @@ const rentalItems = [
     },
   {
     name: "Girl Skateboards",
-    type: "Hello Kitty and Friends Gass Pompompurin",
+    type: "Gass Pompompurin",
     price: "$5.00/hr",
     image: PompomBoard,
   },

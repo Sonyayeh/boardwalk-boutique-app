@@ -56,7 +56,7 @@ const items = [
   },
   {
     name: "Girl\nSkateboard",
-    detail: "Hello Kitty and Friends Gass Pompompurin",
+    detail: "Gass Pompompurin",
     price: "$5.00/hr",
     image: PompomBoard,
     page: "Pom",
@@ -353,6 +353,15 @@ apparelIconGroup: {
   textAlign: "center",
   fontFamily: "serif",
 },
+
+  productType: {
+    color: DARK,
+    textAlign: "center",
+    fontFamily: "serif",
+    fontSize: 10,
+    marginTop: 2,
+  },
+
 
   detail: {
     marginTop: 22,
