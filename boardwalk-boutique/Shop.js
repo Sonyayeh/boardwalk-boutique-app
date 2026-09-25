@@ -119,7 +119,11 @@ function ProductCard({ item, onPress, addLikeItem, showLikePopup, apparel }) {
         <Ionicons name="cart-outline" size={20} color="black" />
       </View>
       <Text style={styles.productName}>{item.name}</Text>
-      {item.detail ? <Text style={styles.detail}>{item.detail}</Text> : <View style={{ height: 34 }} />}
+      {item.detail ? (
+        <Text style={styles.detail}>{item.detail}</Text>
+      ) : !apparel ? (
+        <View style={{ height: 34 }} />
+      ) : null}
       <Text style={styles.price}>{item.price}</Text>
       {item.page && !item.detail ? <Text style={styles.viewDetails}>View Details</Text> : null}
     </TouchableOpacity>
