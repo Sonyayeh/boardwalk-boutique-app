@@ -105,19 +105,19 @@ function ProductCard({ item, onPress, addLikeItem, showLikePopup, apparel }) {
           resizeMode="cover"
         />
       </View>
-      <View style={styles.iconGroup}>
-        <TouchableOpacity onPress={() => {
-            setLiked(!liked);
-            handleLikeItem();
-          }}>
-          <Ionicons
-            name={liked ? "heart" : "heart-outline"}
-            size={20}
-            color={liked ? "red" : "black"}
-          />
-        </TouchableOpacity>
-        <Ionicons name="cart-outline" size={20} color="black" />
-      </View>
+      <View style={apparel ? styles.apparelIconGroup : styles.boardIconGroup}>
+  <TouchableOpacity onPress={() => {
+      setLiked(!liked);
+      handleLikeItem();
+    }}>
+    <Ionicons
+      name={liked ? "heart" : "heart-outline"}
+      size={20}
+      color={liked ? "red" : "black"}
+    />
+  </TouchableOpacity>
+  <Ionicons name="cart-outline" size={20} color="black" />
+</View>
       <Text style={styles.productName}>{item.name}</Text>
       {item.detail ? (
         <Text style={styles.detail}>{item.detail}</Text>
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
 },
 
 boardImage: {
-  width: "100%",
+  width: "80%",
   height: "100%",
 },
 
@@ -324,18 +324,24 @@ apparelImageWrap: {
 },
 
 apparelImage: {
-  width: "100%",
+  width: "80%",
   height: "100%",
   borderRadius: 8,
 },
 
 
-iconGroup: {
-  flexDirection: "row",
-  gap: 10,
-  marginTop: 8,
-  alignSelf: "flex-end",
-  marginRight: 8,
+boardIconGroup: {
+  position: "absolute",
+  right: -10,
+  top: 95,
+  alignItems: "center",
+},
+
+apparelIconGroup: {
+  position: "absolute",
+  right: -10,
+  top: 65,
+  alignItems: "center",
 },
 
  productName: {
