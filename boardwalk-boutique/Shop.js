@@ -88,7 +88,7 @@ const items = [
   },
 ];
 
-function ProductCard({ item, onPress, addLikeItem, showLikePopup }) {
+function ProductCard({ item, onPress, addLikeItem, showLikePopup, apparel }) {
   const [liked, setLiked] = useState(false);
 
   const handleLikeItem = () => {
@@ -98,11 +98,13 @@ function ProductCard({ item, onPress, addLikeItem, showLikePopup }) {
 
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} disabled={!onPress}>
-      <Image
-        source={item.image}
-        style={styles.boardImage}
-        resizeMode="cover"
-      />
+      <View style={apparel ? styles.apparelImageWrap : styles.boardImageWrap}>
+        <Image
+          source={item.image}
+          style={apparel ? styles.apparelImage : styles.boardImage}
+          resizeMode="cover"
+        />
+      </View>
       <View style={styles.iconGroup}>
         <TouchableOpacity onPress={() => {
             setLiked(!liked);
@@ -117,9 +119,9 @@ function ProductCard({ item, onPress, addLikeItem, showLikePopup }) {
         <Ionicons name="cart-outline" size={20} color="black" />
       </View>
       <Text style={styles.productName}>{item.name}</Text>
-{item.detail ? <Text style={styles.detail}>{item.detail}</Text> : <View style={{ height: 34 }} />}
-<Text style={styles.price}>{item.price}</Text>
-{item.page && !item.detail ? <Text style={styles.viewDetails}>View Details</Text> : null}
+      {item.detail ? <Text style={styles.detail}>{item.detail}</Text> : <View style={{ height: 34 }} />}
+      <Text style={styles.price}>{item.price}</Text>
+      {item.page && !item.detail ? <Text style={styles.viewDetails}>View Details</Text> : null}
     </TouchableOpacity>
   );
 }
@@ -175,16 +177,17 @@ export default function Shop({ setPage, rentalCart, likedItems, addLikeItem }) {
         <Text style={styles.sub}>Hottest Apparels:</Text>
 
        <View style={styles.grid}>
-          {clothes.map((item, index) => (
-            <ProductCard
-              key={index}
-              item={item}
-              onPress={undefined}
-              addLikeItem={addLikeItem}
-              showLikePopup={showLikePopup}
-            />
-          ))}
-        </View>
+  {clothes.map((item, index) => (
+    <ProductCard
+      key={index}
+      item={item}
+      onPress={undefined}
+      addLikeItem={addLikeItem}
+      showLikePopup={showLikePopup}
+      apparel
+    />
+  ))}
+</View>
       </ScrollView>
 
       <Animated.View
@@ -297,10 +300,38 @@ const styles = StyleSheet.create({
     minHeight: 285,
   },
 
-  boardImage: {
-    width: 50,
-    height: 120,
-  },
+  boardImageWrap: {
+  width: 50,
+  height: 120,
+  justifyContent: "center",
+  alignItems: "center",
+},
+
+boardImage: {
+  width: "100%",
+  height: "100%",
+},
+
+apparelImageWrap: {
+  width: 90,
+  height: 90,
+  justifyContent: "center",
+  alignItems: "center",
+},
+
+apparelImage: {
+  width: "100%",
+  height: "100%",
+  borderRadius: 8,
+},
+
+// iconGroup: {
+//   flexDirection: "row",
+//   gap: 10,
+//   marginTop: 8,
+//   alignSelf: "flex-end",
+//   marginRight: 8,
+// },
 
   iconGroup: {
     position: "absolute",
