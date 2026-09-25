@@ -70,19 +70,19 @@ const items = [
   },
   {
     name: "Dustin\nHenry",
-    detail: "",
+    detail: "Frog Wise One",
     price: "$6.00/hr",
     image: BlueBoard,
   },
   {
     name: "Krooked",
-    detail: "",
+    detail: "Team Eyes",
     price: "$16.00/hr",
     image: WhiteBlueBoard,
   },
   {
     name: "FA",
-    detail: "",
+    detail: "Class Photo",
     price: "$16.00/hr",
     image: MosaicBoard,
   },
