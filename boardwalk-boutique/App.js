@@ -886,7 +886,7 @@ tabText: {
 
   boardIcons: {
   position: "absolute",
-  right: 2,
+  right: -5,
   top: 88,
   gap: 4,
   alignItems: "center",
@@ -1012,12 +1012,13 @@ submitButton: {
   justifyContent: "center",
   alignItems: "center",
   height: 30,
+  width: 60,
 },
 
 submitButtonText: {
   color: "white",
   fontWeight: "600",
-  fontSize: 13,
+  fontSize: 12,
 },
 
 footerBottom: {
