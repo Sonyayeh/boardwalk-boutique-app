@@ -59,13 +59,13 @@ const rentalItems = [
       image: PinkBoard,
     },
   {
-    name: "Girl Skateboards",
+    name: "Girl\nSkateboards",
     type: "Pompompurin",
     price: "$5.00/hr",
     image: PompomBoard,
   },
   {
-    name: "Dustin Henry",
+    name: "Dustin\nHenry",
     type: "Frog Unisex",
     price: "$6.00/hr",
     image: BlueBoard,
@@ -131,38 +131,38 @@ function ProductCard({ item, shop, showCartPopup, addRentalItem, showLikePopup, 
 
   return (
     <TouchableOpacity
-      style={styles.card}
-      activeOpacity={[PinkBoard, OrangeBoard, PompomBoard].includes(item.image) ? 0.7 : 1}
-      onPress={handleCardPress}
-    >
-      <View style={shop ? styles.shopImage : styles.boardImage}>
-        <Image
-          source={item.image}
-          style={shop ? styles.realShopItem : styles.realBoard}
-          resizeMode="contain"
-        />
+  style={styles.card}
+  activeOpacity={[PinkBoard, OrangeBoard, PompomBoard].includes(item.image) ? 0.7 : 1}
+  onPress={handleCardPress}
+>
+  <View style={shop ? styles.apparelImageWrap : styles.boardImageWrap}>
+    <Image
+      source={item.image}
+      style={shop ? styles.apparelImage : styles.boardImage}
+      resizeMode="cover"
+    />
+  </View>
 
-        <View style={shop ? styles.shopIcons : styles.boardIcons}>
-          <TouchableOpacity onPress={handleLikeItem}>
-            <Ionicons
-              name={liked ? "heart" : "heart-outline"}
-              size={20}
-              color={liked ? "red" : "black"}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={handleAddToCart}>
-            <Ionicons name="cart-outline" size={20} />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <Text style={styles.productName}>{item.name}</Text>
-      <Text style={styles.productType}>{item.type}</Text>
-      <Text style={styles.price}>{item.price}</Text>
-
-      {!shop && <Text style={styles.details}>View Details</Text>}
+  <View style={shop ? styles.shopIcons : styles.boardIcons}>
+    <TouchableOpacity onPress={handleLikeItem}>
+      <Ionicons
+        name={liked ? "heart" : "heart-outline"}
+        size={20}
+        color={liked ? "red" : "black"}
+      />
     </TouchableOpacity>
+
+    <TouchableOpacity onPress={handleAddToCart}>
+      <Ionicons name="cart-outline" size={20} />
+    </TouchableOpacity>
+  </View>
+
+  <Text style={styles.productName}>{item.name}</Text>
+  <Text style={styles.productType}>{item.type}</Text>
+  <Text style={styles.price}>{item.price}</Text>
+
+  {!shop && <Text style={styles.details}>View Details</Text>}
+</TouchableOpacity>
   );
 }
 
@@ -368,10 +368,10 @@ if (page === "shop") {
       rentalCart={rentalCart}
       likedItems={likedItems}
       addLikeItem={addLikeItem}
+      removeLikeItem={removeLikeItem}
       showLikePopup={showLikePopup}
-      addRentalItem={addRentalItem} 
-      rentalCart={rentalCart} 
-      likedItems={likedItems} 
+      showRemovePopup={showRemovePopup}
+      addRentalItem={addRentalItem}
     />
   );
 }
@@ -430,9 +430,20 @@ if (page === "Pom") {
 }
 
 if (page === "Review") {
-  return <Review setPage={setPage} addRentalItem={addRentalItem} rentalCart={rentalCart} />;
+  return (
+    <Review
+      setPage={navigate}
+      goBack={goBack}
+      addRentalItem={addRentalItem}
+      rentalCart={rentalCart}
+      likedItems={likedItems}
+      addLikeItem={addLikeItem}
+      removeLikeItem={removeLikeItem}
+      showLikePopup={showLikePopup}
+      showRemovePopup={showRemovePopup}
+    />
+  );
 }
-
 if (page === "Favourite") {
   return (
     <Favourite
@@ -499,17 +510,18 @@ if (page === "Favourite") {
         <Section title="Recommendations">
   <View style={styles.row}>
     {rentalItems.map((item) => (
-      <ProductCard
-        key={item.type}
-        item={item}
-        showCartPopup={showCartPopup}
-        addRentalItem={addRentalItem}
-        showLikePopup={showLikePopup}
-        showRemovePopup={showRemovePopup}
-        addLikeItem={addLikeItem}
-        removeLikeItem={removeLikeItem}
-        setPage={navigate}
-      />
+    <ProductCard
+  key={item.type}
+  item={item}
+  showCartPopup={showCartPopup}
+  addRentalItem={addRentalItem}
+  showLikePopup={showLikePopup}
+  showRemovePopup={showRemovePopup}
+  addLikeItem={addLikeItem}
+  removeLikeItem={removeLikeItem}
+  setPage={navigate}
+  likedItems={likedItems}
+/>
     ))}
   </View>
 </Section>
@@ -518,17 +530,18 @@ if (page === "Favourite") {
   <View style={styles.row}>
     {shopItems.map((item) => (
       <ProductCard
-        key={item.type}
-        item={item}
-        shop
-        showCartPopup={showCartPopup}
-        addRentalItem={addRentalItem}
-        showLikePopup={showLikePopup}
-        showRemovePopup={showRemovePopup}
-        addLikeItem={addLikeItem}
-        removeLikeItem={removeLikeItem}
-        setPage={navigate}
-      />
+  key={item.type}
+  item={item}
+  shop
+  showCartPopup={showCartPopup}
+  addRentalItem={addRentalItem}
+  showLikePopup={showLikePopup}
+  showRemovePopup={showRemovePopup}
+  addLikeItem={addLikeItem}
+  removeLikeItem={removeLikeItem}
+  setPage={navigate}
+  likedItems={likedItems}
+/>
     ))}
   </View>
 </Section>
@@ -538,16 +551,17 @@ if (page === "Favourite") {
   <View style={styles.row}>
     {rentalItems.map((item) => (
       <ProductCard
-        key={item.type}
-        item={item}
-        showCartPopup={showCartPopup}
-        addRentalItem={addRentalItem}
-        showLikePopup={showLikePopup}
-        showRemovePopup={showRemovePopup}
-        addLikeItem={addLikeItem}
-        removeLikeItem={removeLikeItem}
-        setPage={navigate}
-      />
+  key={item.type}
+  item={item}
+  showCartPopup={showCartPopup}
+  addRentalItem={addRentalItem}
+  showLikePopup={showLikePopup}
+  showRemovePopup={showRemovePopup}
+  addLikeItem={addLikeItem}
+  removeLikeItem={removeLikeItem}
+  setPage={navigate}
+  likedItems={likedItems}
+/>
     ))}
   </View>
 
@@ -560,17 +574,19 @@ if (page === "Favourite") {
        <Section title="Our Shop">
   <View style={styles.row}>
     {shopItems.map((item) => (
-      <ProductCard
-        key={item.type}
-        item={item}
-        shop
-        showCartPopup={showCartPopup}
-        addRentalItem={addRentalItem}
-        showLikePopup={showLikePopup}
-        showRemovePopup={showRemovePopup}
-        addLikeItem={addLikeItem}
-        setPage={navigate}
-      />
+     <ProductCard
+  key={item.type}
+  item={item}
+  shop
+  showCartPopup={showCartPopup}
+  addRentalItem={addRentalItem}
+  showLikePopup={showLikePopup}
+  showRemovePopup={showRemovePopup}
+  addLikeItem={addLikeItem}
+  removeLikeItem={removeLikeItem}
+  setPage={navigate}
+  likedItems={likedItems}
+/>
           ))}
         </View>
 
@@ -801,10 +817,13 @@ tabText: {
 
   shopNow: {
     position: "absolute",
-    bottom: -25,
+    bottom: -10,
+    right: -2,
     color: "#B00000",
     fontWeight: "bold",
     fontFamily: "serif",
+    fontSize: 15,
+    textDecorationLine:"underline",
   },
 
   brandSection: {
@@ -814,7 +833,7 @@ tabText: {
 
   section: {
     paddingVertical: 36,
-    paddingHorizontal: 18,
+    paddingHorizontal: 22,
   },
 
   sectionTitle: {
@@ -848,65 +867,68 @@ tabText: {
     fontFamily: "serif",
   },
 
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
+row: {
+   flexDirection: "row",
+  flexWrap: "wrap",
+  justifyContent: "space-between",
+},
 
-  card: {
-    width: "30%",
-    alignItems: "center",
-  },
+card: {
+  width: "31%",
+  alignItems: "center",
+  marginBottom: 40,
+},
 
-  boardImage: {
-    height: 135,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "70",
-    alignSelf: "center",  
-  },
 
-  shopImage: {
+  boardImageWrap: {
+  width: 50,
   height: 120,
-  width: 80,   
   justifyContent: "center",
   alignItems: "center",
-  alignSelf: "center",
-  },
+},
 
-  realBoard: {
-    width: 70,
-    height: 130,
-  },
+boardImage: {
+  width: "80%",
+  height: "100%",
+},
 
-  realShopItem: {
-    width: 80,
-    height: 80,
-  },
+apparelImageWrap: {
+  width: 90,
+  height: 90,
+  justifyContent: "center",
+  alignItems: "center",
+},
+
+apparelImage: {
+  width: "70%",
+  height: "100%",
+  borderRadius: 8,
+},
+
 
   boardIcons: {
   position: "absolute",
-  right: -5,
-  top: 88,
-  gap: 4,
+  right: -10,
+  top: 95,
   alignItems: "center",
 },
 
 shopIcons: {
   position: "absolute",
-  right: 2,
-  top: 64,
-  gap: 4,
+  right: -10,
+  top: 95,
   alignItems: "center",
 },
 
-  productName: {
-    color: DARK,
-    textAlign: "center",
-    fontFamily: "serif",
-    fontSize: 12,
-    lineHeight: 14,
-  },
+ productName: {
+  marginTop: 12,
+  color: DARK,
+  fontSize: 12,
+  lineHeight: 14,
+  height: 32,
+  textAlign: "center",
+  fontFamily: "serif",
+},
 
   productType: {
     color: DARK,

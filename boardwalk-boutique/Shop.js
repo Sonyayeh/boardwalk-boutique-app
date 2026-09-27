@@ -91,7 +91,7 @@ const items = [
 function ProductCard({ item, onPress, addLikeItem, showLikePopup, apparel, likedItems, removeLikeItem, showRemovePopup }) {
   const liked = likedItems.some((i) => i.type === item.type);
 
-  const handleLikeItem = () => {
+   const handleLikeItem = () => {
     if (liked) {
       if (removeLikeItem) removeLikeItem(item);
       if (showRemovePopup) showRemovePopup();
@@ -128,10 +128,11 @@ function ProductCard({ item, onPress, addLikeItem, showLikePopup, apparel, liked
   );
 }
 
-export default function Shop({ setPage, rentalCart, likedItems, addLikeItem, removeLikeItem, showRemovePopup }) {
+export default function Shop({ setPage, rentalCart, likedItems, addLikeItem, removeLikeItem }) {
   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);
   const totalLiked = likedItems.reduce((sum, item) => sum + item.quantity, 0);
   const likeFadeAnim = useState(new Animated.Value(0))[0];
+  const removeFadeAnim = useState(new Animated.Value(0))[0];
 
   const showLikePopup = () => {
     Animated.sequence([
@@ -140,6 +141,14 @@ export default function Shop({ setPage, rentalCart, likedItems, addLikeItem, rem
       Animated.timing(likeFadeAnim, { toValue: 0, duration: 250, useNativeDriver: true }),
     ]).start();
   };
+  
+    const showRemovePopup = () => {
+  Animated.sequence([
+    Animated.timing(removeFadeAnim, { toValue: 1, duration: 250, useNativeDriver: true }),
+    Animated.delay(1200),
+    Animated.timing(removeFadeAnim, { toValue: 0, duration: 250, useNativeDriver: true }),
+  ]).start();
+};
 
   return (
     <View style={styles.screen}>
@@ -181,18 +190,19 @@ export default function Shop({ setPage, rentalCart, likedItems, addLikeItem, rem
 
         <Text style={styles.sub}>Hottest Apparels:</Text>
 
-       <View style={styles.grid}>
+      <View style={styles.grid}>
   {clothes.map((item, index) => (
     <ProductCard
-  key={index}
-  item={item}
-  onPress={item.page ? () => setPage(item.page) : undefined}
-  addLikeItem={addLikeItem}
-  showLikePopup={showLikePopup}
-  likedItems={likedItems}
-  removeLikeItem={removeLikeItem}
-  showRemovePopup={showRemovePopup}
-/>
+      key={index}
+      item={item}
+      onPress={item.page ? () => setPage(item.page) : undefined}
+      addLikeItem={addLikeItem}
+      showLikePopup={showLikePopup}
+      likedItems={likedItems}
+      removeLikeItem={removeLikeItem}
+      showRemovePopup={showRemovePopup}
+      apparel
+    />
   ))}
 </View>
       </ScrollView>
@@ -208,6 +218,21 @@ export default function Shop({ setPage, rentalCart, likedItems, addLikeItem, rem
 >
   <View style={styles.popupBox}>
     <Text style={styles.centerPopupText}>Added to Favourites!</Text>
+  </View>
+</Animated.View>
+
+    {/* the remove from favourite list */}
+<Animated.View
+  pointerEvents="none"
+  style={[
+    styles.screenPopup,
+    {
+      opacity: removeFadeAnim,
+    },
+  ]}
+>
+  <View style={styles.popupBox}>
+    <Text style={styles.centerPopupText}>Removed from Favourites.</Text>
   </View>
 </Animated.View>
 
@@ -285,6 +310,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 40,
   },
+
   sub: {
     fontSize: 20,
     color: DARK,
@@ -319,14 +345,14 @@ boardImage: {
 },
 
 apparelImageWrap: {
-  width: 90,
+  width: 70,
   height: 90,
   justifyContent: "center",
   alignItems: "center",
 },
 
 apparelImage: {
-  width: "70%",
+  width: "90%",
   height: "100%",
   borderRadius: 8,
 },

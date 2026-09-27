@@ -38,26 +38,26 @@ const items = [
   },
   {
     name: "Dustin\nHenry",
-    type: "",
+    type: "Frog Unisex",
     price: "$6.00/hr",
     image: BlueBoard,
   },
   {
     name: "FA",
-    type: "",
+    type: "Store Collage",
     price: "$15.00/hr",
     image: PinkBoard,
     page: "Fa",
   },
   {
     name: "Krooked",
-    type: "",
+    type: "Trio Deck",
     price: "$16.00/hr",
     image: WhiteBlueBoard,
   },
   {
     name: "FA",
-    type: "",
+    type: "Statue Deck",
     price: "$16.00/hr",
     image: MosaicBoard,
   },
@@ -89,11 +89,13 @@ function ProductCard({ item, onPress, likedItems, addLikeItem, removeLikeItem, s
 
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} disabled={!onPress}>
+     <View style={styles.boardImageWrap}>
       <Image
         source={item.image}
         style={styles.boardImage}
-        resizeMode="contain"
+        resizeMode="cover"
       />
+    </View>
       <View style={styles.iconGroup}>
         <TouchableOpacity onPress={handleLikeItem}>
           <Ionicons name={liked ? "heart" : "heart-outline"} size={20} color={liked ? "red" : "black"} />
@@ -105,7 +107,6 @@ function ProductCard({ item, onPress, likedItems, addLikeItem, removeLikeItem, s
       <Text style={styles.productName}>{item.name}</Text>
       <Text style={styles.productType}>{item.type}</Text>
       <Text style={styles.price}>{item.price}</Text>
-      {item.page ? <Text style={styles.viewDetails}>View Details</Text> : null}
     </TouchableOpacity>
   );
 }
@@ -229,13 +230,12 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 28,
+    fontSize: 31,
     color: DARK,
     fontWeight: "bold",
     fontFamily: "serif",
     textAlign: "center",
-    marginBottom: 44,
-    paddingTop:20,
+    marginBottom: 40,
   },
 
   grid: {
@@ -248,61 +248,52 @@ const styles = StyleSheet.create({
   card: {
     width: "31%",
     alignItems: "center",
-    marginBottom: 88,
     minHeight: 285,
   },
 
-  boardImage: {
-    width: 92,
-    height: 178,
-  },
+ boardImageWrap: {
+  width: 50,
+  height: 120,
+  justifyContent: "center",
+  alignItems: "center",
+},
 
-  iconGroup: {
-    position: "absolute",
-    right: -2,
-    top: 152,
-    alignItems: "center",
-  },
+boardImage: {
+  width: "80%",
+  height: "100%",
+},
 
-  productName: {
+iconGroup: {
+  position: "absolute",
+  right: -2,
+  top: 88,
+  alignItems: "center",
+},
+
+   productName: {
     marginTop: 12,
     color: DARK,
-    fontSize: 15,
-    lineHeight: 16,
+    fontSize: 12,
+    lineHeight: 14,
+    height: 32,
     textAlign: "center",
     fontFamily: "serif",
   },
 
-  productName: {
-  marginTop: 12,
-  color: DARK,
-  fontSize: 12,     
-  lineHeight: 14,   
-  textAlign: "center",
-  fontFamily: "serif",
-},
-
-productType: {     
-  color: DARK,
-  textAlign: "center",
-  fontFamily: "serif",
-  fontSize: 10,
-  marginTop: 2,
-},
-
-price: {
-  marginTop: 14,
-  color: DARK,
-  fontSize: 11,      
-  textAlign: "center",
-  fontFamily: "serif", 
-},
+  productType: {
+    color: DARK,
+    textAlign: "center",
+    fontFamily: "serif",
+    fontSize: 10,
+    marginTop: 2,
+  },
 
   price: {
     marginTop: 14,
     color: DARK,
-    fontSize: 16,
+    fontSize: 11,
     textAlign: "center",
+    fontFamily: "serif",
   },
 
   viewDetails: {
