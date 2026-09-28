@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import {
+  Animated,
   Image,
   ScrollView,
   StyleSheet,
@@ -31,7 +32,7 @@ const items = [
   },
   {
     name: "Girl\nSkateboard",
-    type: "PomPomPurin",
+    type: "Pompompurin",
     price: "$5.00/hr",
     image: PompomBoard,
     page: "Pom",
@@ -63,13 +64,7 @@ const items = [
   },
 ];
 
-const pageMap = {
-  [PinkBoard]: "Fa",
-  [OrangeBoard]: "Orange",
-  [PompomBoard]: "Pom",
-};
-
-function ProductCard({ item, onPress, likedItems, addLikeItem, removeLikeItem, showLikePopup, showRemovePopup, addRentalItem, showCartPopup }) {
+function ProductCard({ Animated, item, onPress, likedItems, addLikeItem, removeLikeItem, showLikePopup, showRemovePopup, addRentalItem, showCartPopup }) {
   const liked = likedItems.some((i) => i.type === item.type);
 
   const handleLikeItem = () => {
@@ -111,9 +106,24 @@ function ProductCard({ item, onPress, likedItems, addLikeItem, removeLikeItem, s
   );
 }
 
-export default function Recommendation({ setPage, rentalCart, likedItems, addLikeItem, removeLikeItem, showLikePopup, showRemovePopup, addRentalItem, showCartPopup }) {
+export default function Recommendation({ setPage, rentalCart, likedItems, addLikeItem, removeLikeItem, addRentalItem }) {
   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);
   const totalLiked = likedItems.reduce((sum, item) => sum + item.quantity, 0);
+    const fadeAnim = useState(new Animated.Value(0))[0];
+  const likeFadeAnim = useState(new Animated.Value(0))[0];
+  const removeFadeAnim = useState(new Animated.Value(0))[0];
+
+  const runPopup = (anim) => {
+    Animated.sequence([
+      Animated.timing(anim, { toValue: 1, duration: 250, useNativeDriver: true }),
+      Animated.delay(1200),
+      Animated.timing(anim, { toValue: 0, duration: 250, useNativeDriver: true }),
+    ]).start();
+  };
+
+  const showCartPopup = () => runPopup(fadeAnim);
+  const showLikePopup = () => runPopup(likeFadeAnim);
+  const showRemovePopup = () => runPopup(removeFadeAnim);
   return (
     <View style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scroll}>
@@ -161,9 +171,27 @@ export default function Recommendation({ setPage, rentalCart, likedItems, addLik
 />
       ))}
       </View>
-      </ScrollView>
+    </ScrollView>
 
-       <View style={styles.bottomNav}>
+      <Animated.View pointerEvents="none" style={[styles.screenPopup, { opacity: fadeAnim }]}>
+        <View style={styles.popupBox}>
+          <Text style={styles.centerPopupText}>Item added to cart!</Text>
+        </View>
+      </Animated.View>
+
+      <Animated.View pointerEvents="none" style={[styles.screenPopup, { opacity: likeFadeAnim }]}>
+        <View style={styles.popupBox}>
+          <Text style={styles.centerPopupText}>Added to Favourites!</Text>
+        </View>
+      </Animated.View>
+
+      <Animated.View pointerEvents="none" style={[styles.screenPopup, { opacity: removeFadeAnim }]}>
+        <View style={styles.popupBox}>
+          <Text style={styles.centerPopupText}>Removed from Favourites.</Text>
+        </View>
+      </Animated.View>
+
+      <View style={styles.bottomNav}>
               {/* the home button */}
               <TouchableOpacity onPress={() => setPage("home")} >
                         <Ionicons name="home-outline" size={24} />
@@ -270,6 +298,12 @@ iconGroup: {
   alignItems: "center",
 },
 
+  itemLink: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+  },
+
    productName: {
     marginTop: 12,
     color: DARK,
@@ -301,6 +335,30 @@ iconGroup: {
     color: DARK,
     fontSize: 13,
     textAlign: "center",
+  },
+
+    screenPopup: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 9999,
+  },
+
+  popupBox: {
+    backgroundColor: "rgba(70,70,70,0.92)",
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 14,
+  },
+
+  centerPopupText: {
+    color: "white",
+    fontSize: 14,
+    fontWeight: "600",
   },
 
   bottomNav: {

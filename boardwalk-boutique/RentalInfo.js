@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Button } from "react-native-web";
 import Logo from "./assets/skateboards/logo.png";
 
 const BLUE = "#C8D4EE";
@@ -22,6 +21,7 @@ export default function RentalInfo({
   decreaseItem,
   deleteItem,
   likedItems,
+  openItem,
 }) {
   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);
   const totalLiked = likedItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -66,14 +66,18 @@ export default function RentalInfo({
         ) : (
           rentalCart.map((item, index) => (
             <View key={`${item.type}-${index}`} style={styles.itemCard}>
+            <TouchableOpacity onPress={() => openItem && openItem(item)}>
               <Image source={item.image} style={styles.image} resizeMode="contain" />
+            </TouchableOpacity>
 
-              <View style={styles.info}>
+            <View style={styles.info}>
+              <TouchableOpacity onPress={() => openItem && openItem(item)}>
                 <Text style={styles.name}>{item.name}</Text>
                 <Text style={styles.type}>{item.type}</Text>
                 <Text style={styles.price}>{item.price}</Text>
+              </TouchableOpacity>
 
-                <View style={styles.quantityRow}>
+              <View style={styles.quantityRow}>
                   <TouchableOpacity
                     style={styles.quantityButton}
                     onPress={() => decreaseItem(item.type)}

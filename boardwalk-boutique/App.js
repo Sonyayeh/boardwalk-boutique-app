@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import ProductDetail from "./ProductDetail";
+import products from "./products";
 import {
   Animated,
   Image,
@@ -52,14 +54,14 @@ const brands = [
 ];
 
 const rentalItems = [
-   {
-      name: "FA",
-      type: "Store Collage",
-      price: "$15.00/hr",
-      image: PinkBoard,
-    },
   {
-    name: "Girl\nSkateboards",
+    name: "FA",
+    type: "Store Collage",
+    price: "$15.00/hr",
+    image: PinkBoard,
+  },
+  {
+    name: "Girl\nSkateboards", 
     type: "Pompompurin",
     price: "$5.00/hr",
     image: PompomBoard,
@@ -178,6 +180,7 @@ function Section({ title, children }) {
 export default function App() {
   const [page, setPage] = useState("home");
   const [history, setHistory] = useState([]);
+  const [selectedItem, setSelectedItem] = useState(null);
   const navigate = (nextPage) => {
     setHistory((prev) => [...prev, page]);
     setPage(nextPage);
@@ -252,17 +255,13 @@ const removeLikeItem = (item) => {
 
  const addRentalItem = (item) => {
   setRentalCart((prev) => {
-    const existingItem = prev.find(
-      (cartItem) => cartItem.type === item.type
-    );
+    const key = item.type.toLowerCase();
+    const existingItem = prev.find((cartItem) => cartItem.type.toLowerCase() === key);
 
     if (existingItem) {
       return prev.map((cartItem) =>
-        cartItem.type === item.type
-          ? {
-              ...cartItem,
-              quantity: cartItem.quantity + 1,
-            }
+        cartItem.type.toLowerCase() === key
+          ? { ...cartItem, quantity: cartItem.quantity + 1 }
           : cartItem
       );
     }
@@ -327,6 +326,27 @@ const handleSubscribe = () => {
   setEmail("");
 };
 
+const pageForType = {
+  standard: "Orange",
+  pompompurin: "Pom",
+  "store collage": "Fa",
+  "deck store collage": "Fa",
+};
+
+const openItem = (item) => {
+  const key = item.type.toLowerCase();
+  const target = pageForType[key];
+  if (target) {
+    navigate(target);
+    return;
+  }
+  const product = products.find((p) => p.type.toLowerCase() === key);
+  if (product) {
+    setSelectedItem(product);
+    navigate("detail");
+  }
+};
+
 if (page === "rentalInfo") {
   return (
     <RentalInfo
@@ -339,6 +359,7 @@ if (page === "rentalInfo") {
       increaseItem={increaseItem}
       decreaseItem={decreaseItem}
       deleteItem={deleteItem}
+      openItem={openItem}
     />
   );
 }
@@ -444,14 +465,31 @@ if (page === "Review") {
     />
   );
 }
+
 if (page === "Favourite") {
   return (
     <Favourite
-      setPage={setPage}
+      setPage={navigate}
       goBack={goBack}
       rentalCart={rentalCart}
       likedItems={likedItems}
       deleteItem={deleteLikedItem}
+      openItem={openItem}
+    />
+  );
+}
+
+if (page === "detail" && selectedItem) {
+  return (
+    <ProductDetail
+      item={selectedItem}
+      setPage={navigate}
+      goBack={goBack}
+      rentalCart={rentalCart}
+      likedItems={likedItems}
+      addRentalItem={addRentalItem}
+      addLikeItem={addLikeItem}
+      removeLikeItem={removeLikeItem}
     />
   );
 }
@@ -818,7 +856,7 @@ tabText: {
   shopNow: {
     position: "absolute",
     bottom: -10,
-    right: -2,
+    right: -5,
     color: "#B00000",
     fontWeight: "bold",
     fontFamily: "serif",

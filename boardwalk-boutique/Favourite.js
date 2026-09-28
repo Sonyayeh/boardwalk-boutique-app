@@ -13,11 +13,7 @@ import Logo from "./assets/skateboards/logo.png";
 const BLUE = "#C8D4EE";
 const DARK = "#12345C";
 
-export default function Favourite({ 
-  setPage,
-  rentalCart,
-  deleteItem, 
-  likedItems }) {
+export default function Favourite({ setPage, goBack, rentalCart, likedItems, deleteItem, openItem }) {
   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);
   const totalLiked = likedItems.reduce((sum, item) => sum + item.quantity, 0);
 
@@ -50,7 +46,11 @@ export default function Favourite({
   </View>
 ) : (
   likedItems.map((item, index) => (
-    <View key={`${item.type}-${index}`} style={styles.itemCard}>
+  <View key={`${item.type}-${index}`} style={styles.itemCard}>
+    <TouchableOpacity
+      style={styles.itemLink}
+      onPress={() => openItem && openItem(item)}
+    >
       <Image source={item.image} style={styles.image} resizeMode="contain" />
 
       <View style={styles.info}>
@@ -58,15 +58,16 @@ export default function Favourite({
         <Text style={styles.type}>{item.type}</Text>
         <Text style={styles.price}>{item.price}</Text>
       </View>
+    </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={() => deleteItem(item.type)}
-      >
-        <Ionicons name="heart" size={22} color="red" />
-      </TouchableOpacity>
-    </View>
-  ))
+    <TouchableOpacity
+      style={styles.deleteButton}
+      onPress={() => deleteItem(item.type)}
+    >
+      <Ionicons name="heart" size={22} color="red" />
+    </TouchableOpacity>
+  </View>
+))
 )}
       </ScrollView>
 
@@ -165,6 +166,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     flexDirection: "row",
     alignItems: "center",
+  },
+
+    itemLink: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
   },
 
   image: {
