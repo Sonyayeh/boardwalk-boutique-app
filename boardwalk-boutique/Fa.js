@@ -28,7 +28,7 @@ export default function Fa({
   likeFadeAnim, removeFadeAnim,
 }) {
   const outerScrollRef = useRef(null);
-  const [liked, setLiked] = useState(false);
+  const liked = likedItems.some((i) => i.type === "Store Collage");
   const fadeAnim = useState(new Animated.Value(0))[0];
   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);
 const totalLiked = likedItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -156,11 +156,11 @@ function RecommendedCard({ item }) {
     style={styles.book}
     onPress={() => {
       addRentalItem({
-        name: "FA",
-        type: "Deck Store Collage",
-        price: "$15.00/hr",
-        image: PinkBoard,
-      });
+      name: "FA",
+      type: "Store Collage",  
+      price: "$15.00/hr",
+      image: PinkBoard,
+    });
       showCartPopup();
     }}
   >
@@ -170,32 +170,31 @@ function RecommendedCard({ item }) {
     </View>
   </TouchableOpacity>
 
-  <TouchableOpacity
-    style={styles.heart}
-    onPress={() => {
-      if (liked) {
-        if (removeLikeItem) removeLikeItem({ type: "Deck Store Collage" });
-        if (showRemovePopup) showRemovePopup();
-      } else {
-        if (addLikeItem) {
-          addLikeItem({
-            name: "FA",
-            type: "Deck Store Collage",
-            price: "$15.00/hr",
-            image: PinkBoard,
-          });
-        }
-        if (showLikePopup) showLikePopup();
+ <TouchableOpacity
+  style={styles.heart}
+  onPress={() => {
+    if (liked) {
+      if (removeLikeItem) removeLikeItem({ type: "Store Collage" });
+      if (showRemovePopup) showRemovePopup();
+    } else {
+      if (addLikeItem) {
+        addLikeItem({
+          name: "FA",
+          type: "Store Collage",
+          price: "$15.00/hr",
+          image: PinkBoard,
+        });
       }
-      setLiked(!liked);
-    }}
-  >
-    <Ionicons
-      name={liked ? "heart" : "heart-outline"}
-      size={30}
-      color={liked ? "red" : "black"}
-    />
-  </TouchableOpacity>
+      if (showLikePopup) showLikePopup();
+    }
+  }}
+>
+  <Ionicons
+    name={liked ? "heart" : "heart-outline"}
+    size={30}
+    color={liked ? "red" : "black"}
+  />
+</TouchableOpacity>
 </View>
                 <View>
                     <Text style={styles.title}>

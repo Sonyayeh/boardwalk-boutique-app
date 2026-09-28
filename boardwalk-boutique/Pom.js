@@ -28,7 +28,7 @@ const WHITE = "#FFFFFF";
 export default function Pompom({ setPage, addRentalItem, rentalCart, goBack, likedItems, addLikeItem, removeLikeItem, showLikePopup, showRemovePopup,
   likeFadeAnim, removeFadeAnim, }) {
   const outerScrollRef = useRef(null);
-  const [liked, setLiked] = useState(false);
+  const liked = likedItems.some((i) => i.type === "Pompompurin");
   const fadeAnim = useState(new Animated.Value(0))[0];
   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);
 const totalLiked = likedItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -75,37 +75,36 @@ const totalLiked = likedItems.reduce((sum, item) => sum + item.quantity, 0);
 
 
 const recommendedBoards = [
-  {
-    name: "Girl\nSkateboards",
-    price: "$4.00/hr",
-    image: OrangeBoard,
-  },
-  {
-    name: "Thrasher",
-    type: "Goat Socks",
-    price: "$15.00",
-    image: Socks,
-  },
-  {
-    name: "Bronze",
-    type: "Ranch Tee Navy",
-    price: "$34.00",
-    image: Tshirt,
-  },
+  { name: "Girl\nSkateboard", type: "Standard", price: "$4.00/hr", image: OrangeBoard },
+  { name: "Thrasher", type: "Goat Socks", price: "$15.00", image: Socks },
+  { name: "Bronze", type: "Ranch Tee Navy", price: "$34.00", image: Tshirt },
 ];
 
 function RecommendedCard({ item }) {
-  const [rentalCart, setRentalCart] = useState([]);
+  const cardLiked = likedItems.some((i) => i.type === item.type);
+
+  const handleCardLike = () => {
+    if (cardLiked) {
+      if (removeLikeItem) removeLikeItem(item);
+      if (showRemovePopup) showRemovePopup();
+    } else {
+      if (addLikeItem) addLikeItem(item);
+      if (showLikePopup) showLikePopup();
+    }
+  };
+
   return (
     <View style={styles.carouselCard}>
-      <Image
-        source={item.image}
-        style={styles.carouselImage}
-        resizeMode="contain"
-      />
+      <Image source={item.image} style={styles.carouselImage} resizeMode="contain" />
 
       <View style={styles.carouselIcons}>
-        <Ionicons name="heart-outline" size={20} color="black" />
+        <TouchableOpacity onPress={handleCardLike}>
+          <Ionicons
+            name={cardLiked ? "heart" : "heart-outline"}
+            size={20}
+            color={cardLiked ? "red" : "black"}
+          />
+        </TouchableOpacity>
         <Ionicons name="cart-outline" size={20} color="black" />
       </View>
 
@@ -159,7 +158,7 @@ function RecommendedCard({ item }) {
               onPress={() => {
                 addRentalItem({
                   name: "Girl\nSkateboard",
-                  type: "PomPomPurin",
+                  type: "Pompompurin",
                   price: "$5.00/hr",
                   image: PompomBoard,
                 });
@@ -171,24 +170,23 @@ function RecommendedCard({ item }) {
                 <Ionicons name="cart-outline" size={30} color="white" />
               </View>
             </TouchableOpacity>
-              <TouchableOpacity
+             <TouchableOpacity
   style={styles.heart}
   onPress={() => {
     if (liked) {
-      if (removeLikeItem) removeLikeItem({ type: "PomPomPurin" });
+      if (removeLikeItem) removeLikeItem({ type: "Pompompurin" });
       if (showRemovePopup) showRemovePopup();
     } else {
       if (addLikeItem) {
         addLikeItem({
           name: "Girl\nSkateboard",
-          type: "PomPomPurin",
+          type: "Pompompurin",
           price: "$5.00/hr",
           image: PompomBoard,
         });
       }
       if (showLikePopup) showLikePopup();
     }
-    setLiked(!liked);
   }}
 >
   <Ionicons

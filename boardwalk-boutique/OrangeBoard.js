@@ -52,43 +52,23 @@ function StarRating({ rating, reviewCount }) {
 }
 
 const recommendedBoards = [
-  {
-    name: "Girl\nSkateboards",
-    price: "$4.00/hr",
-    image: OrangeBoard,
-  },
-  {
-    name: "Girl\nSkateboards",
-    price: "$5.00/hr",
-    image: PompomBoard,
-  },
-  {
-    name: "Dustin\nHenry",
-    price: "$6.00/hr",
-    image: BlueBoard,
-  },
+  { name: "Girl\nSkateboard", type: "Standard", price: "$4.00/hr", image: OrangeBoard },
+  { name: "Girl\nSkateboard", type: "Pompompurin", price: "$5.00/hr", image: PompomBoard },
+  { name: "Dustin\nHenry", type: "Frog Unisex", price: "$6.00/hr", image: BlueBoard },
 ];
 
 function RecommendedCard({ item, likedItems, addLikeItem, removeLikeItem, showLikePopup, showRemovePopup }) {
-  const [liked, setLiked] = useState(false);
+  const liked = likedItems.some((i) => i.type === item.type);
 
   const handleLikeItem = () => {
-  if (liked) {
-    if (removeLikeItem) removeLikeItem({ type: "Standard" });
-    if (showRemovePopup) showRemovePopup();
-  } else {
-    if (addLikeItem) {
-      addLikeItem({
-        name: "Girl\nSkateboard",
-        type: "Standard",
-        price: "$4.00/hr",
-        image: OrangeBoard,
-      });
+    if (liked) {
+      if (removeLikeItem) removeLikeItem(item);
+      if (showRemovePopup) showRemovePopup();
+    } else {
+      if (addLikeItem) addLikeItem(item);
+      if (showLikePopup) showLikePopup();
     }
-    if (showLikePopup) showLikePopup();
-  }
-  setLiked(!liked);
-};
+  };
 
   return (
     <View style={styles.carouselCard}>
@@ -115,7 +95,7 @@ export default function Orange({
   const fadeAnim = useState(new Animated.Value(0))[0];
   const totalItems = rentalCart.reduce((sum, item) => sum + item.quantity, 0);
 
-  const liked = likedItems.some((i) => i.name === THIS_ITEM.name);
+  const liked = likedItems.some((i) => i.type === THIS_ITEM.type);
 
   const handleLikeItem = () => {
     if (liked) {
